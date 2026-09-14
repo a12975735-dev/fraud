@@ -1,36 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { AlertTriangle, Clock, CheckCircle } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+
+const GATEWAY_URL = "http://127.0.0.1:8081";
 
 export default function Alerts() {
-  const storedCase = JSON.parse(localStorage.getItem('fraud-investigation-active-case') || 'null');
-  const caseAlert = storedCase ? {
-    id: storedCase.id,
-    type: "Investigation Case Created",
-    entity: `${storedCase.suspects || 0} suspect(s), ${storedCase.linkedEntities || 0} linked entit(ies)`,
-    severity: "Medium",
-    time: "Just now",
-  } : null;
-  const resolvedAlertIds = JSON.parse(localStorage.getItem('fraud-resolved-alert-ids') || '[]');
-  const [mockAlerts, setMockAlerts] = useState([
-    ...(caseAlert ? [caseAlert] : []),
-    { id: "ALT-9001", type: "Velocity Anomaly", entity: "Account 2003456789", severity: "Critical", time: "10 mins ago" },
-    { id: "ALT-9002", type: "Location Impossible", entity: "Card ending 3921", severity: "High", time: "45 mins ago" },
-    { id: "ALT-9003", type: "Large Transfer", entity: "Account 1009876543", severity: "Medium", time: "2 hours ago" },
-    { id: "ALT-9004", type: "Login Failed Attempts", entity: "User ID 502", severity: "Low", time: "5 hours ago" },
-  ].filter((alert) => !resolvedAlertIds.includes(alert.id)));
-  const storedResolvedAlerts = JSON.parse(localStorage.getItem('fraud-resolved-alerts') || '[]');
-  const [resolvedAlerts, setResolvedAlerts] = useState(storedResolvedAlerts);
+  const { token } = useAuth();
+  const [alerts, setAlerts] = useState([]);
+  const [resolvedAlerts, setResolvedAlerts] = useState([]);
+
+  useEffect(() => {
+    if (!token) return undefined;
+    const loadAlerts = async () => {
+      const response = await fetch(`${GATEWAY_URL}/api/transactions?page=0&size=100`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error(`Gateway returned HTTP ${response.status}`);
+      const data = await response.json();
+      setAlerts((data.content || [])
+        .filter((transaction) => transaction.riskLevel === 'high' || transaction.riskLevel === 'medium')
+        .map((transaction) => ({
+          id: transaction.transactionId,
+          transactionId: transaction.transactionId,
+          type: transaction.type === 'TRANSFER' ? 'Suspicious Transfer' : `${transaction.type || 'Transaction'} Risk`,
+          entity: `${transaction.sourceAccount || 'Unknown account'} -> ${transaction.destinationAccount || 'Unknown destination'}`,
+          severity: transaction.riskLevel === 'high' ? 'Critical' : 'Medium',
+          time: new Date(transaction.timestamp).toLocaleString(),
+        })));
+    };
+    loadAlerts().catch((error) => console.error('Unable to load live alerts:', error));
+    return undefined;
+  }, [token]);
 
   const resolveAlert = (id) => {
-    const alert = mockAlerts.find((item) => item.id === id);
+    const alert = alerts.find((item) => item.id === id);
     if (!alert) return;
     const resolvedAlert = { ...alert, time: 'Just now' };
     const nextResolvedAlerts = [...resolvedAlerts, resolvedAlert];
     setResolvedAlerts(nextResolvedAlerts);
-    setMockAlerts((alerts) => alerts.filter((item) => item.id !== id));
-    localStorage.setItem('fraud-resolved-alerts', JSON.stringify(nextResolvedAlerts));
-    localStorage.setItem('fraud-resolved-alert-ids', JSON.stringify([...resolvedAlertIds, id]));
+    setAlerts((items) => items.filter((item) => item.id !== id));
   };
 
   return (
@@ -42,7 +51,7 @@ export default function Alerts() {
         </div>
 
         <div style={{ display: "flex", gap: 16, flexDirection: "column" }}>
-          {mockAlerts.map((a) => (
+          {alerts.map((a) => (
             <div key={a.id} style={{ background: "#fff", borderRadius: 12, border: "1px solid #E7E9EE", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                 <div style={{ 
@@ -72,7 +81,7 @@ export default function Alerts() {
               </div>
             </div>
           ))}
-          {mockAlerts.length === 0 && (
+          {alerts.length === 0 && (
             <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #E7E9EE", padding: 24, color: "#6B7280", textAlign: "center" }}>
               No active alerts.
             </div>

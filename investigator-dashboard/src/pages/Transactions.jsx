@@ -25,14 +25,6 @@ export default function Transactions() {
   const { token, isDemoMode } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [showFlaggedOnly, setShowFlaggedOnly] = useState(false);
-  const [createdTransactions, setCreatedTransactions] = useState([]);
-  const mockTransactions = [
-    { id: "TXN-100928", amount: "$1,250.00", date: "2023-10-25 14:32", status: "Completed", risk: "Low" },
-    { id: "TXN-100929", amount: "$8,400.00", date: "2023-10-25 15:10", status: "Flagged", risk: "High" },
-    { id: "TXN-100930", amount: "$125.50", date: "2023-10-25 16:05", status: "Completed", risk: "Low" },
-    { id: "TXN-100931", amount: "$3,200.00", date: "2023-10-25 16:45", status: "Pending", risk: "Medium" },
-    { id: "TXN-100932", amount: "$50.00", date: "2023-10-25 17:22", status: "Completed", risk: "Low" },
-  ];
   const [liveTransactions, setLiveTransactions] = useState([]);
 
   useEffect(() => {
@@ -58,7 +50,7 @@ export default function Transactions() {
     return () => clearInterval(interval);
   }, [isDemoMode, token]);
 
-  const transactions = isDemoMode ? [...createdTransactions, ...mockTransactions] : liveTransactions;
+  const transactions = liveTransactions;
 
   const query = searchTerm.trim().toLowerCase();
   const visibleTransactions = transactions.filter((transaction) => {
@@ -92,16 +84,6 @@ export default function Transactions() {
       ...graphTransactions.filter((item) => item.transactionId !== graphTransaction.transactionId),
       graphTransaction,
     ]));
-    setCreatedTransactions((items) => [
-      {
-        id: transaction.transactionId,
-        amount: `$${Number(transaction.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
-        date: new Date(transaction.timestamp).toLocaleString(),
-        status: transaction.status === 'FLAGGED' ? 'Flagged' : transaction.status === 'PENDING' ? 'Pending' : 'Completed',
-        risk: transaction.riskLevel ? transaction.riskLevel[0].toUpperCase() + transaction.riskLevel.slice(1) : 'Unknown',
-      },
-      ...items,
-    ]);
   };
 
   const investigateTransaction = (transaction) => {

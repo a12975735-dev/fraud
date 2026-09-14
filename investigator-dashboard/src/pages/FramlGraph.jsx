@@ -1,44 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ZoomIn, ZoomOut, Maximize2, User, Smartphone } from "lucide-react";
 import Sidebar from "../components/Sidebar";
+import { useAuth } from "../context/AuthContext";
 
-const NODES = [
-  { id: "acc1", label: `Account\n1002345678`, x: 110, y: 60, type: "account" }, { id: "acc2", label: `Account\n1003987654`, x: 430, y: 60, type: "account" },
-  { id: "device", label: `Device\nDEV-8F6A21C9`, x: 270, y: 190, type: "device" }, { id: "acc3", label: `Account\n1005567890`, x: 110, y: 320, type: "account" },
-  { id: "ben", label: `Beneficiary\nJohn D.`, x: 270, y: 320, type: "beneficiary" }, { id: "acc4", label: `Account\n1006677881`, x: 430, y: 320, type: "account" },
-];
-const EDGES = [
-  ["acc1", "device", "uses"], ["acc2", "device", "uses"], ["acc3", "device", "uses"], ["acc4", "device", "uses"], ["device", "ben", "pays"],
-];
+const GATEWAY_URL = "http://127.0.0.1:8081";
 
-function buildGraphData() {
-  const transactions = JSON.parse(localStorage.getItem("fraud-graph-transactions") || "[]");
-  const dynamicNodes = [];
-  const dynamicEdges = [];
+function buildGraphData(transactions) {
+  const nodes = new Map();
+  const edges = [];
   transactions.forEach((transaction, index) => {
     const offset = index * 55;
     const deviceId = `device-${transaction.deviceId}`;
     const sourceId = `source-${transaction.sourceAccount}`;
     const destinationId = `destination-${transaction.destinationAccount}`;
-    dynamicNodes.push(
-      { id: sourceId, label: `Account\n${transaction.sourceAccount}`, x: 80 + (offset % 380), y: 45 + (index % 3) * 105, type: "account" },
-      { id: deviceId, label: `Device\n${transaction.deviceId}`, x: 270, y: 195, type: "device" },
-      { id: destinationId, label: `Account\n${transaction.destinationAccount}`, x: 460 - (offset % 120), y: 330 - (index % 3) * 75, type: "account" },
-    );
-    dynamicEdges.push([sourceId, deviceId, "uses"], [deviceId, destinationId, "transfers"]);
+    nodes.set(sourceId, { id: sourceId, label: `Account\n${transaction.sourceAccount || "Unknown"}`, x: 80 + (offset % 380), y: 45 + (index % 3) * 105, type: "account" });
+    nodes.set(deviceId, { id: deviceId, label: `Device\n${transaction.deviceId || "Unknown"}`, x: 270, y: 195, type: "device" });
+    nodes.set(destinationId, { id: destinationId, label: `Account\n${transaction.destinationAccount || "Unknown"}`, x: 460 - (offset % 120), y: 330 - (index % 3) * 75, type: "account" });
+    edges.push([sourceId, deviceId, "uses"], [deviceId, destinationId, "transfers"]);
   });
-  return { nodes: [...NODES, ...dynamicNodes], edges: [...EDGES, ...dynamicEdges] };
+  return { nodes: [...nodes.values()], edges };
 }
 
 export default function FramlGraph() {
-  const graph = buildGraphData();
-  const [selected, setSelected] = useState("device");
+  const { token } = useAuth();
+  const [transactions, setTransactions] = useState([]);
+  const [loadError, setLoadError] = useState('');
+  useEffect(() => {
+    if (!token) return undefined;
+    fetch(`${GATEWAY_URL}/api/transactions?page=0&size=100`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Gateway returned HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => setTransactions(data.content || []))
+      .catch((error) => setLoadError(error.message));
+    return undefined;
+  }, [token]);
+  const graph = buildGraphData(transactions);
+  const [selected, setSelected] = useState(null);
   const [zoom, setZoom] = useState(1);
   const [expanded, setExpanded] = useState(false);
   const findNode = (id) => graph.nodes.find((node) => node.id === id);
-  const sel = findNode(selected) || graph.nodes[0];
+  const sel = findNode(selected) || graph.nodes.find((node) => node.type === "device") || graph.nodes[0] || {
+    id: null,
+    label: "No live data",
+    type: "device",
+  };
   const colors = { account: "#1B4DFF", beneficiary: "#2FA36B", device: "#7C3AED" };
-  const linkedNodes = graph.edges.filter(([from, to]) => from === selected || to === selected);
+  const linkedNodes = graph.edges.filter(([from, to]) => from === sel?.id || to === sel?.id);
   const linkedAccounts = linkedNodes.filter(([from, to]) => findNode(from).type === "account" || findNode(to).type === "account").length;
   const linkedBeneficiaries = linkedNodes.filter(([from, to]) => findNode(from).type === "beneficiary" || findNode(to).type === "beneficiary").length;
   const nodeStats = [
@@ -53,6 +64,7 @@ export default function FramlGraph() {
       <Sidebar activeKey="graph" />
       <main className="framl-main" style={{ flex: 1, padding: "24px 28px" }}>
         <h1 style={{ fontSize: 19, fontWeight: 700, margin: "0 0 18px" }}>FRAML Graph — Device View</h1>
+        {loadError && <div className="error-banner">Unable to load graph data: {loadError}</div>}
         <div className={`framl-layout${expanded ? " framl-layout-expanded" : ""}`}>
           <div className="framl-graph-panel" style={{ flex: 2, background: "#fff", border: "1px solid #E7E9EE", borderRadius: 10, padding: "12px 16px", position: "relative" }}>
             <div style={{ position: "absolute", top: 14, right: 16, display: "flex", gap: 6, zIndex: 2 }}>

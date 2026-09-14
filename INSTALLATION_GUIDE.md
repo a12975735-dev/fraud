@@ -1,6 +1,6 @@
 # Fraud Detection System: Installation and User Guide
 
-This guide is written for someone who has never used a programming project before. Follow the **Quick Demo** section first. It lets you open the dashboard without setting up the back-end services.
+This guide is written for someone who has never used a programming project before. Follow the live setup so the dashboard uses the XAMPP database records.
 
 ## 1. What this project does
 
@@ -13,7 +13,7 @@ The system is a fraud investigation dashboard. It includes:
 
 ## 2. Install the required programs
 
-### Quick Demo requirements
+### Dashboard requirements
 
 Install these two programs on the computer:
 
@@ -51,11 +51,9 @@ cd fraud
 
 The project is now in a folder called `fraud` on the Desktop.
 
-## 4. Quick Demo: easiest way to open the dashboard
+## 4. Dashboard setup
 
-This mode does not require Python, Java, Docker, MySQL, Kafka, or a database.
-
-From the project folder, run:
+Install the dashboard packages from the project folder:
 
 ```powershell
 cd investigator-dashboard
@@ -69,9 +67,12 @@ Open the address shown in the terminal. It is normally:
 
 **http://localhost:5173**
 
-On the login screen, click **Quick Demo Sign-In**. Do not use the regular gateway login in this mode. The demo account works without any back-end services and includes sample alerts and transactions.
+On the login screen, use the live account:
 
-### Stop the Quick Demo
+- Username: `admin`
+- Password: `demo-admin`
+
+### Stop the dashboard
 
 Return to the PowerShell window and press `Ctrl+C` once.
 
@@ -169,7 +170,7 @@ Open another PowerShell window and run:
 
 ```powershell
 cd $HOME\Desktop\fraud\spring-gateway
-$env:DB_URL="jdbc:mysql://localhost:3306/frauddetection"
+$env:DB_URL="jdbc:mysql://localhost:3307/frauddetection"
 $env:DB_USERNAME="fraud_gateway_user"
 $env:DB_PASSWORD="change-me-local-password"
 $env:SCORING_SERVICE_URL="http://localhost:8000"
@@ -197,8 +198,6 @@ For live login, use:
 
 - Username: `admin`
 - Password: `demo-admin`
-
-The **Quick Demo Sign-In** button is also available if you want to use the dashboard without live services.
 
 ## 6. What to click in the dashboard
 
@@ -231,7 +230,7 @@ If XAMPP is not being used, start both services with:
 docker compose up -d mysql kafka
 ```
 
-The Spring gateway is configured for MySQL port `3306`, which is also the port used by this Docker setup.
+The Spring gateway is configured for XAMPP MariaDB port `3307`. If you use Docker instead, set `$env:DB_URL="jdbc:mysql://localhost:3306/frauddetection"` before starting the gateway.
 
 ## 8. Common problems
 
@@ -256,7 +255,7 @@ Use the exact URL printed by Vite. If port `5173` is busy, Vite may choose `5174
 
 ### Regular login does not work
 
-Regular login requires the Spring Boot gateway on port `8081`. For a no-setup preview, use **Quick Demo Sign-In** instead.
+Live login requires the Spring Boot gateway on port `8081`, with XAMPP MySQL running on port `3307`.
 
 ### Docker services do not start
 
@@ -268,7 +267,7 @@ docker compose up -d mysql kafka
 
 ### A port is already in use
 
-Close the other application using that port, or stop an old copy of the service with `Ctrl+C`. The expected ports are `3306` for MySQL, `9092` for Kafka, `5000` for Flask, `8000` for FastAPI, `8081` for Spring Boot, and `5173` for the dashboard.
+Close the other application using that port, or stop an old copy of the service with `Ctrl+C`. The expected ports are `3307` for XAMPP MySQL, `9092` for Kafka, `5000` for Flask, `8000` for FastAPI, `8081` for Spring Boot, and `5173` for the dashboard.
 
 ## 9. Important note about training data
 

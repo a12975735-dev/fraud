@@ -7,7 +7,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,6 +39,7 @@ public class FraudScoringController {
     private final ScoredTransactionRepository transactionRepository;
     private final TransactionProducerService transactionProducerService;
     private final ObjectMapper objectMapper;
+    private long nextTransactionNumber = 1000;
 
     public FraudScoringController(RestTemplate restTemplate, ScoredTransactionRepository transactionRepository,
                                   TransactionProducerService transactionProducerService, ObjectMapper objectMapper) {
@@ -52,7 +52,7 @@ public class FraudScoringController {
     @PostMapping(value = "/score_transaction", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> scoreTransaction(@Valid @RequestBody TransactionRequest transaction) {
-        String transactionId = UUID.randomUUID().toString();
+        String transactionId = nextTransactionId();
         logger.info("Incoming async score request endpoint=/api/score_transaction transactionId={} timestamp={}",
                 transactionId, Instant.now());
 
@@ -70,8 +70,16 @@ public class FraudScoringController {
             scoreDirectly(message, transactionRepository.findByTransactionId(transactionId).orElseThrow());
         }
 
-        logger.info("Response status=202 endpoint=/api/score_transaction transactionId={} status=PENDING", transactionId);
+        logger.info("Response status=202 endpoint=/api/score_transaction transactionId={} status=COMPLETED", transactionId);
         return ResponseEntity.accepted().body(Map.of("transactionId", transactionId, "status", "COMPLETED"));
+    }
+
+    private synchronized String nextTransactionId() {
+        String transactionId;
+        do {
+            transactionId = "LIVE-" + nextTransactionNumber++;
+        } while (transactionRepository.existsByTransactionId(transactionId));
+        return transactionId;
     }
 
     private void scoreDirectly(TransactionMessage message, ScoredTransaction transaction) {

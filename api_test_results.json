@@ -1,0 +1,232 @@
+{
+  "TC-01": {
+    "status": 200,
+    "response": {
+      "risk_score": 5,
+      "ml_risk_score": 0,
+      "biometric_risk_score": null,
+      "risk_level": "low",
+      "top_reason_codes": [
+        {
+          "feature": "amount",
+          "impact": -5.7889
+        },
+        {
+          "feature": "step",
+          "impact": -3.617
+        },
+        {
+          "feature": "balance_discrepancy",
+          "impact": 2.7919
+        }
+      ],
+      "shap_reason_codes": [
+        {
+          "feature": "amount",
+          "impact": -5.7889
+        },
+        {
+          "feature": "step",
+          "impact": -3.617
+        },
+        {
+          "feature": "balance_discrepancy",
+          "impact": 2.7919
+        }
+      ],
+      "lime_reason_codes": [],
+      "level1_rules": {
+        "level": 1,
+        "triggered": false,
+        "hits": [],
+        "risk_score": 0,
+        "label": "pass"
+      },
+      "level3_anomaly": {
+        "level": 3,
+        "is_anomaly": false,
+        "anomaly_score": 5,
+        "decision_function": 0.130798,
+        "label": "within_profile"
+      },
+      "framl": {
+        "aml_flag": false,
+        "aml_labels": [],
+        "gnn_risk_score": 0,
+        "origin_in_ring": false,
+        "dest_in_ring": false,
+        "origin_embedding": null,
+        "dest_embedding": null,
+        "region": null
+      },
+      "aml_flag": false,
+      "step_up_required": false,
+      "step_up_challenge": null,
+      "region": null,
+      "sourceIp": null,
+      "nameOrig": null,
+      "nameDest": null,
+      "latency_ms": 126.51
+    }
+  },
+  "TC-02": {
+    "status": 200,
+    "response": {
+      "risk_score": 13,
+      "ml_risk_score": 0,
+      "biometric_risk_score": null,
+      "risk_level": "low",
+      "top_reason_codes": [
+        {
+          "feature": "amount",
+          "impact": -5.7889
+        },
+        {
+          "feature": "step",
+          "impact": -3.617
+        },
+        {
+          "feature": "balance_discrepancy",
+          "impact": 2.7919
+        }
+      ],
+      "shap_reason_codes": [
+        {
+          "feature": "amount",
+          "impact": -5.7889
+        },
+        {
+          "feature": "step",
+          "impact": -3.617
+        },
+        {
+          "feature": "balance_discrepancy",
+          "impact": 2.7919
+        }
+      ],
+      "lime_reason_codes": [],
+      "level1_rules": {
+        "level": 1,
+        "triggered": false,
+        "hits": [],
+        "risk_score": 0,
+        "label": "pass"
+      },
+      "level3_anomaly": {
+        "level": 3,
+        "is_anomaly": false,
+        "anomaly_score": 13,
+        "decision_function": 0.096576,
+        "label": "within_profile"
+      },
+      "framl": {
+        "aml_flag": false,
+        "aml_labels": [],
+        "gnn_risk_score": 0,
+        "origin_in_ring": false,
+        "dest_in_ring": false,
+        "origin_embedding": null,
+        "dest_embedding": null,
+        "region": null
+      },
+      "aml_flag": false,
+      "step_up_required": false,
+      "step_up_challenge": null,
+      "region": null,
+      "sourceIp": null,
+      "nameOrig": null,
+      "nameDest": null,
+      "latency_ms": 34.79
+    }
+  },
+  "TC-03": {
+    "latency_ms": 2063.1463527679443
+  },
+  "TC-04": {
+    "status": 422,
+    "response": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",0],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting value\"}}]}"
+  },
+  "TC-05": {
+    "status": 422,
+    "response": {
+      "detail": [
+        {
+          "type": "missing",
+          "loc": [
+            "body",
+            "amount"
+          ],
+          "msg": "Field required",
+          "input": {
+            "type": "PAYMENT"
+          }
+        }
+      ]
+    }
+  },
+  "TC-12": {
+    "status": 200,
+    "response": {
+      "decision": "APPROVED",
+      "probability": 0.1767,
+      "risk_score": 17.67,
+      "shap_explanation": [
+        {
+          "contribution": 3.7254,
+          "direction": "Increases Risk",
+          "feature": "avg_monthly_cashflow"
+        },
+        {
+          "contribution": -2.8973,
+          "direction": "Decreases Risk",
+          "feature": "credit_inquiries_3m"
+        },
+        {
+          "contribution": -2.4115,
+          "direction": "Decreases Risk",
+          "feature": "utility_payment_ratio"
+        },
+        {
+          "contribution": -1.9362,
+          "direction": "Decreases Risk",
+          "feature": "cashflow_volatility"
+        },
+        {
+          "contribution": 1.7324,
+          "direction": "Increases Risk",
+          "feature": "social_engagement_score"
+        }
+      ],
+      "status": "SUCCESS"
+    }
+  },
+  "TC-14": {
+    "status": 200,
+    "response": {
+      "eer_score": 0.0,
+      "genuine_probability": 1.0,
+      "is_authenticated": true,
+      "status": "SUCCESS"
+    }
+  },
+  "TC-15": {
+    "status": 200,
+    "response": {
+      "eer_score": 99.0,
+      "genuine_probability": 0.0001,
+      "is_authenticated": false,
+      "status": "SUCCESS"
+    }
+  },
+  "TC-16": {
+    "status": 400,
+    "response": {
+      "error": "Missing 'keystroke_features' or 'mouse_features' in request body.",
+      "status": "ERROR"
+    }
+  },
+  "TC-19": {
+    "success_rate": "50/50",
+    "avg_latency_ms": 231.34239673614502
+  }
+}

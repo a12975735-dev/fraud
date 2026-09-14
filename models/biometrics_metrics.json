@@ -1,0 +1,9 @@
+{
+  "source": "synthetic_cmu_remouse_schema",
+  "eer": 0.0883,
+  "threshold": 0.7462,
+  "accuracy": 0.9267,
+  "n_train": 1800,
+  "n_test": 600,
+  "classifier": "MLPClassifier(32,16)"
+}

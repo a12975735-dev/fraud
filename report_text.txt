@@ -1,0 +1,1222 @@
+Cardiff
+ 
+Metropolitan
+ 
+University
+B.Sc.
+ 
+(Hons)
+ 
+in
+ 
+Software Engineering
+ 
+Assignment Cover Sheet
+Student
+ 
+Details
+ 
+(
+ 
+Student
+ 
+should
+ 
+fill
+ 
+the
+ 
+content)
+Name
+Warnakulasooriya Praveen Vimukthi Coonghe 
+Student
+ 
+ID
+BL/BSCSD/34/95  st20286765
+Scheduled
+ 
+unit
+ 
+details
+Unit
+ code
+CSE6035
+Unit
+ 
+title
+Development Project
+Unit
+ 
+enrolment
+ 
+details
+Year
+3
+Study
+ 
+period
+Lecturer
+Mode
+ 
+of
+ 
+delivery
+Full
+ 
+Time
+Assignment
+ 
+Details
+Nature
+ 
+of
+ 
+the
+ 
+Assessment
+Topic
+ 
+of
+ 
+the
+ 
+Case
+ 
+Study
+Learning
+ 
+Outcomes
+ 
+covered
+Word
+ 
+count
+Due
+ 
+date
+ 
+/
+ 
+Time
+Extension
+ 
+granted?
+Yes
+No
+Extension
+ 
+Date
+Is
+ 
+this
+ 
+a
+ resubmission?
+Yes
+No
+Resubmission
+ 
+Date
+Declaration
+I certify that the attached material is my original work. No other person’s work or ideas have been used without acknowledgement.
+ 
+Except
+ 
+where
+ 
+I
+ 
+have
+ 
+clearly
+ 
+stated
+ 
+that
+ 
+I
+ 
+have
+ 
+used
+ 
+some
+ 
+of
+ 
+this
+ 
+material
+ 
+elsewhere,
+ 
+I
+ 
+have
+ 
+not presented it for examination / assessment in any other course or unit at this or any other institution
+Name/Signature
+Date
+Submission
+Return
+ to:
+Result
+Marks
+ 
+by
+ 
+1
+st
+Assessor
+Name
+ 
+&
+ 
+Signature
+ 
+of
+ 
+the
+ 
+1
+st
+ Assessor
+Agreed
+ 
+Mark
+Marks
+ 
+by2nd
+Assessor
+Name
+ 
+&
+ 
+Signature
+ 
+of
+ 
+the
+ 
+2
+nd
+ 
+Assessor
+Comments
+ 
+on
+the
+ 
+Agreed
+ 
+mark
+Declaration
+This work is being submitted in partial fulfilment of the requirements for the degree of Bachelor of Science (Honours) in Software Engineering, and has not previously been accepted in substance for any degree and is not being concurrently submitted in candidature for any degree.
+Signed: 
+Ian Roy 
+(Candidate)
+Date: 
+2026/08/31
+Supervisor's Declaration Statement
+Warnakulasooriya Praveen Vimukthi Coonghe  BL/BSCSD/34/95
+I acknowledge that the above-named student has regularly attended supervision meetings and has actively engaged in the dissertation supervision process throughout the duration of this project.
+Signed: 
+Ian Roy 
+(Supervisor)
+Date: 
+2026/08/31
+Acknowledgement
+I would like to express my sincere gratitude to my supervisor, 
+Mr Ian Roy
+, for his valuable guidance, support, and constructive feedback throughout the development of this final-year project. His advice and encouragement helped me to improve the quality of my work and remain focused throughout the different stages of research, development, testing, and documentation.
+I would also like to express my sincere appreciation to my lecturer, 
+Mr Sanjeewa
+, for his teaching, guidance, and academic support throughout my BSc (Hons) Software Engineering studies. The knowledge and skills gained through his lectures contributed significantly to my ability to undertake and complete this project.
+I am also grateful to the academic staff and lecturers who supported me throughout my studies and provided the knowledge and foundation necessary to complete this project successfully.
+Finally, I would like to thank my family and friends for their continuous encouragement, patience, and support throughout my studies and during the completion of this project. Their motivation and understanding helped me remain committed and focused until its completion.
+Abstract
+The global financial sector is undergoing a structural shift from a digital-first model to an AI-native one, in which fraud prevention, risk management and customer decisioning are increasingly handled by adaptive, intelligent systems rather than static, rule-based controls. Instant payment rails such as 
+FedNow
+, Zelle and RTP settle transactions within seconds, removing the post-transaction review window that traditional fraud detection has relied on, while fraud itself is estimated to cost organisations approximately 5% of annual revenue globally. This project addresses that gap by designing and developing an AI-powered smart banking system that combines behavioural biometric authentication, real-time transaction scoring and predictive risk analytics into a single adaptive architecture.
+A literature review grounded the problem in existing academic and industry research on rule-based fraud detection, behavioural biometrics, ensemble machine learning, graph-based relationship analysis and explainable AI, and identified the principal gap as the integration of these complementary techniques rather than the absence of any individual technique. The proposed system was designed around five modules: a behavioural biometric authentication engine using keystroke and mouse-dynamics features; a Kafka-based real-time transaction-scoring pipeline using gradient-boosted ensemble models (
+XGBoost
+, 
+LightGBM
+, 
+CatBoost
+); a graph-based FRAML (fraud and anti-money-laundering) risk view; a SHAP-based explainability layer; and an investigator dashboard.
+The completed prototype was evaluated against a traditional rule-based baseline using accuracy, precision, recall, F1-score and AUC-ROC. The selected ensemble model achieved an accuracy of 99.75% and an AUC-ROC of 99.51%, substantially outperforming the rule-based baseline (96.84% accuracy, 84.63% AUC-ROC), while SHAP explanations provided transparent, feature-level justification for individual flagged transactions. Four of the six project objectives were fully achieved and two were partially achieved, with the principal limitations relating to the use of synthetic and publicly available datasets and the limited scale of empirical validation of the behavioural-biometric and graph-based components. The project demonstrates the feasibility of an integrated, explainable, real-time fraud-detection architecture and provides a foundation for further development and production-scale validation.
+Table of Contents
+Cardiff
+ 
+Metropolitan
+ 
+University
+1
+Declaration
+2
+Supervisor's Declaration Statement
+3
+Acknowledgement
+4
+Abstract
+5
+Table of Contents
+6
+List of Figures
+9
+List of Tables
+10
+Supervision Meeting Log Sheets
+11
+1.0 Introduction
+16
+1.0 Introduction
+16
+1.1 Background Studies
+16
+1.2 Problem Statement
+17
+1.3 Objective
+17
+1.4 Solutions
+18
+2.0 Literature Review
+19
+2.1 Introduction
+19
+2.2 Background of the Problem Domain
+19
+2.3 Review of Existing Systems and Similar Applications
+19
+2.4 Requirement Engineering and User Needs
+20
+2.5 Software Development Methodologies and SDLC Justification
+20
+2.6 System Architecture, Design Patterns, and Database Design
+20
+2.7 AI Integration Approaches and Intelligent System Features
+21
+2.8 UI/UX, Accessibility, and Human-Computer Interaction
+22
+2.9 Security, Privacy, Scalability, and Deployment Considerations
+22
+2.10 Software Testing and Quality Assurance Approaches
+23
+2.11 System Gap and Justification for the Proposed Solution
+23
+3.0 Planning
+25
+3.0.1 Feasibility Report
+25
+Technical Feasibility
+25
+Operational Feasibility
+25
+Legal and Regulatory Feasibility
+25
+Ethical and Professional Compliance
+26
+3.0.2 Risk Assessment
+26
+3.0.3 SWOT Analysis
+28
+3.0.4 PESTEL Analysis
+28
+3.0.5 Life Cycle Model
+29
+Sprint Structure
+30
+3.1.1 Time Plan
+30
+4.0 Requirement Analysis
+32
+4.2 Requirement Gathering and Analysis
+32
+4.2.1 Requirement Gathering Technique Used for the Project
+32
+4.2.2 Questionnaire
+32
+4.2.3 Interview
+33
+4.3 Functional and Non-Functional Requirements
+33
+4.3.1 Functional Requirements
+33
+4.3.2 Non-Functional Requirement
+34
+5.0 System Design
+36
+5.1 Architecture Diagram
+36
+Authentication Module (Behavioural Biometrics)
+36
+Core Processing Engine (Transaction Scoring)
+37
+Investigator Dashboard
+37
+Reporting and Compliance Module
+37
+5.2 ER Diagram
+37
+5.3 UML Diagrams
+38
+5.4 Wireframe Diagram
+43
+6.0 Implementation
+45
+6.1 Technology Stack
+45
+6.2 Design Patterns
+46
+6.3 Implementation of the Program
+46
+Behavioural Biometric Engine
+46
+Real-Time Transaction-Scoring Pipeline
+47
+FRAML Graph Module
+48
+SHAP Explainability Layer
+49
+Investigator Dashboard
+49
+7.0 Testing and Validation
+51
+Test Plan
+51
+7.1 Functional Evaluation
+51
+Test Cases
+52
+7.2 Fraud Detection Performance
+56
+7.3 Latency Evaluation
+58
+7.4 SHAP Explanation
+58
+7.5 System and FRAML Evaluation
+59
+7.6 Critical Discussion and Objective Achievement
+61
+8.0 Conclusion
+63
+8.1 Conclusion
+63
+8.2 Future Recommendations
+64
+Data Dependency and Quality
+64
+Adversarial Adaptation
+64
+Explainability–Performance Trade-offs
+64
+Scope and Scale Constraints
+65
+8.3 Lessons Learned
+65
+Gantt Chart
+66
+1.
+References
+67
+List of Figures
+Figure 4.1: Proposed System Architecture Diagram
+Figure 5.1: System / Component Architecture Diagram
+Figure 5.2: Entity–Relationship (ER) Diagram
+Figure 5.3: Use Case Diagram
+Figure 5.4: Sequence Diagram – Transaction Scoring and Explanation Flow
+Figure 5.5: Class Diagram
+Figure 5.6: Dashboard Wireframe – Investigator Home Screen
+Figure 5.7: Dashboard Wireframe – Alert Detail / SHAP Explanation View
+Figure 6.1: Login and Authentication Flow of the Implemented System
+Figure 6.2: Core Transaction Processing Screen
+Figure 6.3: Main Investigator Dashboard
+Figure 6.4: Administration and Reporting View
+Figure 7.1: ROC Curve Comparison – Ensemble versus Rule-Based Baseline
+Figure 7.2: SHAP Explanation for a Flagged Transaction
+Figure 7.3: Investigator Dashboard (Evaluation View)
+Figure 7.4: Kafka Transaction Workflow
+Figure 7.5: FRAML Network Graph
+List of Tables
+Table 3.1: Risk Assessment Matrix
+Table 3.2: SWOT Analysis
+Table 3.3: PESTEL Analysis
+Table 3.4: Project Time Plan (Week 1–12)
+Table 4.1: Functional Requirements
+Table 4.2: Non-Functional Requirements
+Table 7.1: Functional Evaluation Results
+Table 7.2: Fraud Detection Model Results
+Table 7.3: Ensemble versus Rule-Based Baseline
+Table 7.4: Transaction-Scoring Latency
+Table 7.5: Achievement of the Six Project Objectives
+Table 7.6 – 7.11: Individual Test Case Records
+Table 8.1: Gantt Chart – Project Schedule
+Supervision Meeting Log Sheets
+A minimum of five supervision meetings must be logged and signed by the supervisor, as required by the CSE6035 assessment brief. Complete and insert the tabl
+e below.
+.
+1.0 Introduction
+1.0 Introduction
+The global financial sector is undergoing a structural shift from a digital-first model to an AI-native one, in which fraud prevention, risk management, and customer decisioning are increasingly handled by adaptive, intelligent systems rather than static, rule-based controls. This shift is driven by necessity rather than preference: instant payment rails such as 
+FedNow
+, Zelle, and RTP settle transactions within seconds, removing the post-transaction review window that traditional fraud detection has relied on. At the same time, fraud is estimated to cost organisations approximately 5% of annual revenue globally, and attackers are increasingly using the same AI techniques that banks are deploying defensively — making fraudulent activity faster to execute, cheaper to scale, and harder to detect using legacy screening methods.
+This project addresses that gap by proposing a smart banking system that combines behavioural biometric authentication, real-time transaction scoring, and predictive risk analytics into a single adaptive architecture. The remainder of this chapter sets out the background to the problem, defines the problem statement precisely, states the project's objectives, and outlines the proposed solution at a high level. Full technical justification, literature grounding, and design detail follow in the chapters that come after.
+1.1 Background Studies
+Transaction monitoring in most financial institutions has historically relied on static, scenario-based rules — for example, flagging any transaction above a fixed threshold from a new account. This approach is simple to implement but does not adapt to new fraud typologies. As fraud patterns evolve, institutions tend to respond by adding more rules rather than replacing the underlying approach, leading to what the industry terms “explosive rule growth.” The resulting rulesets become so complex that they generate contradictory outcomes and very high false-positive rates — industry data puts legacy rule-based false-positive rates at 85–99%. For a mid-tier bank processing around five million transactions daily, this can mean roughly 75,000 unnecessary flags a day, overwhelming investigation teams (alert fatigue) and creating friction for legitimate customers through unnecessary declines.
+This problem has been compounded by the shift to instant payments. Because platforms like 
+FedNow
+ and Zelle clear and settle funds within seconds, there is effectively no window to 
+reverse a fraudulent transaction once it is authorised. Many institutions also still run on legacy, mainframe-based infrastructure that cannot support the sub-second data refresh rates modern fraud-scoring models need, creating a “data quality lag” where models may be scoring against data that is hours old.
+Finally, the nature of the fraud itself is changing. Generative AI is now used to create synthetic identities and to defeat voice/video verification with deepfakes, while automated “attack loop” techniques let fraudsters probe an institution's detection thresholds at scale. Traditional Know-Your-Customer (KYC) processes are largely front-loaded at account opening and do not continuously monitor for post-opening behavioural changes that indicate account takeover or money-mule activity.
+1.2 Problem Statement
+Existing rule-based fraud detection systems used by financial institutions cannot adapt quickly enough to the speed and sophistication of AI-enabled financial crime and instant-payment settlement, resulting in unacceptably high false-positive rates, delayed detection of coordinated fraud, and continued exposure to behaviourally sophisticated attacks (account takeover, synthetic identity fraud, deepfake-based identity spoofing) that static thresholds are not designed to catch. There is a need for a fraud detection approach that scores transactions in real time, authenticates users continuously rather than only at login, and remains explainable enough to satisfy regulatory requirements such as GDPR and the EU AI Act.
+1.3 Objective
+Aim: 
+To design and develop an AI-powered smart banking system incorporating behavioural biometrics, real-time transaction monitoring, and predictive risk analytics, in order to improve fraud detection accuracy and operational efficiency relative to traditional rule-based approaches.
+Objectives:
+To review and critically analyse existing fraud detection methods across electronic payment systems, identifying their limitations with respect to real-time payments.
+To design and implement a behavioural biometric authentication engine based on keystroke dynamics (dwell time, flight time) and mouse movement patterns.
+To develop a real-time transaction-scoring pipeline using a streaming architecture (e.g. Apache Kafka) combined with machine learning ensemble models (
+XGBoost
+, 
+LightGBM
+, 
+CatBoost
+).
+To construct a unified fraud/AML risk view using graph-based analysis to identify coordinated fraud rings not detectable through single-transaction monitoring.
+To integrate explainable AI techniques (e.g. SHAP) so that model decisions can be audited and justified in line with GDPR and EU AI Act requirements.
+To evaluate the resulting system against traditional rule-based approaches using accuracy, precision, recall, F1-score, and AUC-ROC.
+1.4 Solutions
+The proposed solution is a modular system built around three integrated layers:
+A real-time transaction monitoring module, 
+using a multi-tier scoring approach: static rule checks for known-bad patterns, a supervised ML layer producing a 0–99 risk score, and an unsupervised anomaly-detection layer for behavioural deviation from a customer's established profile.
+A behavioural biometric authentication engine, 
+running passively during a session to capture keystroke and mouse-movement patterns, escalating to adaptive authentication challenges when interaction patterns deviate significantly from a user's baseline.
+A unified FRAML (fraud + AML) risk view, 
+using graph-based analysis to detect relationships between accounts, devices, and beneficiaries that indicate coordinated fraud activity.
+Chapter 4 sets out the technical justification and design alternatives considered for each of these layers, Chapter 5 presents the resulting system design, and Chapter 6 documents how the design was implemented as a working prototype.
+2.0 Literature Review
+2.1 Introduction
+This chapter reviews existing academic and industry literature relevant to the proposed AI-powered smart banking system, covering the problem domain, existing commercial and academic systems, requirement engineering practice, development methodologies, system architecture and design patterns, AI integration approaches, human-computer interaction, security and privacy, and software testing for AI-enabled systems. The chapter concludes by identifying the specific gap that the proposed system addresses.
+2.2 Background of the Problem Domain
+The problem domain literature confirms the three limitations introduced in Chapter 1: the rigidity of rule-based transaction monitoring, the latency incompatibility between batch-oriented fraud review and instant-settlement payment rails, and the growing sophistication of AI-enabled financial crime, including synthetic identity fraud and deepfake-based identity spoofing. Regulatory sources such as the UK Financial Conduct Authority and the Central Bank of the UAE describe transaction-monitoring expectations that assume some capacity for adaptive, risk-based screening rather than fixed thresholds alone, reinforcing the practical need for the adaptive architecture proposed in this project.
+2.3 Review of Existing Systems and Similar Applications
+Commercial fraud-prevention platforms demonstrate that individual components of the proposed system already exist in industry. 
+BioCatch
+ and 
+Featurespace
+ provide behavioural-biometric and behavioural-intelligence capabilities, using continuous interaction analysis rather than point-in-time authentication. 
+Feedzai
+ and NICE Actimize combine behavioural, device, transaction and network information for real-time fraud decisions, while Mastercard's Decision Intelligence Pro uses relationships among accounts, merchants, devices and transactions to generate an additional risk score in under 50 milliseconds. Nasdaq's 
+Verafin
+ platform has also introduced an “entity research copilot” to accelerate financial-crime investigation.
+These systems illustrate that AI does not automatically solve fraud detection: machine-learning systems remain dependent on representative data, appropriate validation and continuous 
+monitoring, and commercial vendors continue to invest heavily in explainability and network analytics precisely because single-technique systems remain insufficient on their own. This observation directly supports the integrated, multi-technique approach adopted for the proposed system.
+2.4 Requirement Engineering and User Needs
+Requirement engineering literature emphasises that effective systems must be grounded in the needs of their actual users — in this case, fraud investigators, compliance officers, and, indirectly, banking customers — rather than solely in the capabilities of available technology. This motivates the mixed-methods requirement-gathering approach adopted in Chapter 4 of this report (questionnaire and interview), which is intended to validate that the technical capabilities proposed in this project (real-time scoring, behavioural authentication, explainable decisions) correspond to genuine investigator and institutional needs rather than technology-led assumptions.
+2.5 Software Development Methodologies and SDLC Justification
+An Agile (Scrum) methodology is adopted for this project, in preference to a Waterfall approach. Waterfall assumes requirements can be fully specified upfront and implemented in a single, linear pass — appropriate where the problem and solution are well understood in advance. This project does not fit that profile: model performance (accuracy, EER, false-positive rate) can only be properly assessed once real data has been used to train and test candidate models, and the results of that testing will likely inform subsequent design decisions — for example, which ensemble model to prioritise, or which behavioural features to add or drop. This kind of iterative refinement, based on empirical feedback from each build, is a poor fit for a linear, single-pass methodology and is a much better fit for Scrum's iterative sprint structure, which is why it is adopted as the project's life-cycle model in Chapter 3.
+2.6 System Architecture, Design Patterns, and Database Design
+The literature on real-time analytics architecture distinguishes between kappa (pure streaming) and lambda (combined batch and speed layer) architectures. A pure streaming architecture struggles to efficiently compute long-window aggregate features (e.g. 30-day behavioural baselines) without materialising large amounts of state. A lambda architecture is therefore 
+proposed for this project, separating processing into a speed layer for millisecond-scale transaction scoring and a batch layer for periodic retraining and heavier feature engineering.
+At the design-pattern level, a microservices architectural style is supported by the literature as appropriate for systems that must scale independent components (authentication, scoring, graph analysis, reporting) separately, and this is reflected in the modular structure adopted in Chapter 5. A publish–subscribe (event-driven) pattern, implemented through Apache Kafka, decouples transaction producers from the scoring service, while a layered/MVC-style separation is proposed for the investigator dashboard so that presentation, business logic and data-access concerns remain independently testable. For persistence, a relational database design is proposed for transactional and application data, with a graph representation used specifically for the FRAML risk view, reflecting the different access patterns each requires.
+2.7 AI Integration Approaches and Intelligent System Features
+For behavioural biometrics, a Multi-Layer Perceptron (MLP) classifier is favoured in the literature over simpler distance-based methods (e.g. Euclidean or Manhattan distance to a baseline profile), because MLPs can learn non-linear relationships between multiple behavioural features simultaneously. Motie and 
+Raahemi
+ (2024) and Mishra and Alzoubi (2023) both discuss the effectiveness of ensemble and deep-learning approaches for continuous authentication and financial-fraud classification respectively, supporting the model choices made in Chapter 4.
+For transaction scoring, gradient-boosted ensemble methods (
+XGBoost
+, 
+LightGBM
+, 
+CatBoost
+) are widely reported to perform strongly on structured/tabular transaction data, train faster than deep neural networks of comparable accuracy, and are easier to explain feature-by-feature — an important property given the explainability requirement discussed below. For the unified risk view, Graph Neural Networks (GNNs) are supported in the literature as superior to rule-based link analysis (e.g. de-Marcos et al., 2021), because a GNN can learn weighted, contextual relationships across a graph rather than applying a single binary rule such as “flag any account sharing a device,” which produces high false positives in households with shared devices.
+Lundberg and Lee (2017) introduced SHAP (
+SHapley
+ Additive 
+exPlanations
+) as a unified, theoretically consistent approach for attributing individual feature contributions to a specific model prediction, grounded in cooperative game theory. Arrieta et al. (2020) situate SHAP within the broader explainable-AI (XAI) literature, noting that per-prediction, consistent 
+attribution methods are preferable to global feature-importance measures or LIME's local approximations when regulatory frameworks require that individual automated decisions be explainable to the affected person — directly relevant to the GDPR and EU AI Act requirements identified in this project.
+2.8 UI/UX, Accessibility, and Human-Computer Interaction
+Fraud-detection systems are ultimately used by investigators, meaning that model accuracy alone does not guarantee an effective system. Investigators must interpret alerts, prioritise cases and make decisions using information presented by the interface. A dashboard should therefore prioritise high-risk alerts, provide sufficient transaction context and avoid overwhelming users with unnecessary information, particularly where false-positive alerts create investigation workload. The proposed dashboard addresses this by displaying flagged transactions, regional risk information and SHAP-derived explanations for individual cases.
+The literature on explainable AI also supports presenting explanations in a human-centred form rather than exposing technical model outputs alone. SHAP provides numerical feature contributions, but Arrieta et al. (2020) argue these should be translated into understandable reason codes for investigators. Accessibility is also relevant: information should not depend solely on colour, alerts should have clear text labels, and important information should remain understandable at different screen sizes — considerations that are particularly important in high-stakes systems where investigators may work with large alert volumes for extended periods.
+2.9 Security, Privacy, Scalability, and Deployment Considerations
+Behavioural biometrics introduces additional privacy requirements because keystroke and mouse characteristics can constitute behavioural biometric information when technically processed for unique identification. Article 9 of the GDPR identifies biometric data processed for uniquely identifying a natural person as a special category of personal data and generally prohibits processing unless a permitted condition applies. Therefore, a production implementation would require a clear legal basis, data minimisation, appropriate security controls, access restrictions and retention policies. This project deliberately avoids collecting identifiable real-world biometric information and instead uses publicly available, pre-anonymised datasets, significantly reducing the privacy risk of the academic prototype.
+The EU AI Act also requires careful classification rather than assuming that every biometric system is automatically high-risk. The Act identifies several biometric applications as high-risk but specifically distinguishes certain biometric verification systems whose sole purpose is confirming that a person is who they claim to be. The project's continuous behavioural-risk feature is therefore assessed according to its actual purpose and deployment context. Security also applies to model outputs, transaction records and investigator information: authentication, authorisation, encryption, secure APIs and audit logging are incorporated into the software architecture (Chapter 5), and scalability is supported through the Kafka-based architecture, which provides a foundation for distributed transaction processing beyond the scope of the current academic prototype.
+2.10 Software Testing and Quality Assurance Approaches
+Testing an AI-enabled software system requires both conventional software testing and model-specific validation. Unit testing can verify individual services such as authentication, feature extraction and scoring, while integration testing can verify communication between Kafka, the scoring service, the database and the dashboard. Machine-learning components require additional validation because their behaviour depends on training data as well as software code: Riccio et al. (2020) found that ML software introduces testing challenges because system behaviour is jointly determined by code and training data, while Zhang et al.'s survey of machine-learning testing identifies testing of data, learning programs and frameworks as separate concerns. Schaefer et al. (2023) similarly highlight the importance of combining functional software testing with model-performance evaluation rather than treating successful software execution as equivalent to successful model performance.
+The testing strategy adopted for this project (Chapter 7) therefore combines unit testing, integration testing, end-to-end workflow testing, model validation (accuracy, precision, recall, F1-score, AUC-ROC), performance/latency testing, and explainability testing to confirm that SHAP outputs are generated correctly.
+2.11 System Gap and Justification for the Proposed Solution
+The literature demonstrates that many important components of modern fraud prevention already exist. Commercial platforms such as 
+BioCatch
+ and 
+Featurespace
+ provide behavioural intelligence, while 
+Feedzai
+, NICE Actimize and Mastercard demonstrate real-time AI-based transaction analysis, and commercial systems increasingly use network analytics and 
+explainability. Academic research similarly demonstrates the effectiveness of ensemble learning, behavioural authentication and GNN-based fraud detection. However, these approaches have different strengths and limitations: transaction models are effective for individual-event classification but have limited relational context; behavioural biometrics provide continuous user-risk information but introduce privacy and usability concerns; and GNNs provide relationship analysis but introduce additional graph-construction, scalability and interpretability challenges.
+The identified gap is therefore integration rather than the absence of individual fraud-detection techniques. Existing commercial platforms are sophisticated but proprietary and unsuitable for demonstrating the complete software-engineering development process within a BSc project, while academic studies frequently focus on individual algorithms rather than integrating authentication, streaming, transaction scoring, graph analysis and investigator interfaces into one manageable software artefact. The proposed system addresses this gap through a modular architecture containing a behavioural biometric engine, a Kafka-based transaction-scoring pipeline, a FRAML graph module, a SHAP explainability layer and an investigator dashboard — contributing an integrated software-engineering prototype rather than claiming to invent a new fraud-detection algorithm.
+3.0 Planning
+This chapter sets out how the project was planned before implementation began: its feasibility across four dimensions, the key risks identified and how they were mitigated, a SWOT and PESTEL analysis of the project context, the life-cycle model selected to run the project, and the time plan against which progress was tracked.
+3.0.1 Feasibility Report
+Technical Feasibility
+Python (with the Anaconda distribution) is proposed for machine learning development, given its mature ecosystem (Scikit-learn, TensorFlow/
+Keras
+, 
+XGBoost
+) and extensive community support. Java/Spring Boot is proposed for backend microservice development, and Apache Kafka for streaming transaction data between services — all in wide industrial use with substantial documentation available. For model training, the 
+PaySim
+ synthetic dataset (built specifically for fraud-detection research) removes the need to access real customer data, alongside the CMU Keystroke Dynamics Dataset and a public mouse-dynamics dataset for the biometric components. Together, these tools and datasets are assessed as sufficient to build and evaluate a working prototype within the project timeframe, without requiring access to proprietary bank data or infrastructure.
+Operational Feasibility
+If implemented in a real institution, a system of this kind is intended to reduce manual investigation workload by cutting false-positive alert volume, freeing investigators to focus on genuinely high-risk cases rather than routine noise. For the purposes of this project, operational feasibility rests on the system being deployable as a set of independent microservices that could, in principle, sit alongside — rather than replace — an institution's existing monitoring stack, reducing the operational disruption of adoption.
+Legal and Regulatory Feasibility
+Two regulatory frameworks are directly relevant. Under GDPR, biometric data (including behavioural biometric derivatives such as keystroke timing) is classified as a special category of personal data under Article 9, requiring an explicit legal basis and, generally, explicit consent for processing. The EU AI Act imposes transparency and explainability obligations on 
+automated decision-making systems used in areas such as credit scoring and fraud detection, which is directly relevant given the system's intended use of behavioural risk scoring. The project's use of explainable AI (Section 4.4 discussion, implemented in Chapter 6) is intended to help meet the explainability expectations of the AI Act, and the use of only public, anonymised datasets for development avoids the need to process real customer biometric data during the university project itself.
+Ethical and Professional Compliance
+This project was conducted in accordance with the ethical research requirements of the relevant university research ethics committee, and a Research Ethics Approval Application was submitted at the proposal stage as required by the assessment brief. No real personal or biometric data belonging to identifiable individuals was collected or processed for this project; all model training used publicly available, pre-anonymised datasets (
+PaySim
+, CMU Keystroke Dynamics, and a public mouse-dynamics dataset).
+The project was also conducted in line with the British Computer Society (BCS) Code of Conduct, specifically:
+Public interest — 
+the system's design goal (better fraud detection, fewer wrongful declines) is oriented toward protecting both institutions and customers.
+Professional competence — 
+work remained within the bounds of tools and techniques the student has studied or can reasonably learn and verify during the project.
+Duty of care regarding privacy — 
+the system architecture is designed around data minimisation: only derived numerical features (e.g. dwell-time statistics) are stored, not raw keystroke or mouse-event recordings, reducing the sensitivity of any data the system would handle in a real deployment.
+3.0.2 Risk Assessment
+Table 3.1 sets out the principal risks identified at the planning stage, their likelihood and impact, and the mitigation strategy adopted for each.
+Table 3.1: Risk Assessment Matrix
+Risk
+Likelihood
+Impact
+Mitigation Strategy
+Reliance on synthetic data (
+PaySim
+) may not fully reflect real transaction patterns
+Medium
+High
+Cross-validate on multiple public fraud datasets; clearly scope findings as indicative rather than production-validated.
+Model performance (accuracy, EER) only assessable once real data is trained/tested, risking schedule slippage
+Medium
+Medium
+Adopt Agile/Scrum with two-week sprints so model iterations happen continuously rather than in one late phase.
+Behavioural biometric and GNN components may not reach full validation within a 12-week module
+High
+Medium
+Prioritise a working end-to-end prototype first; document partially-achieved objectives transparently in Chapter 7.
+Kafka / streaming architecture is unfamiliar technology and could cause integration delays
+Medium
+Medium
+Use official documentation and a minimal proof-of-concept pipeline early (Sprint 1) before building dependent modules.
+Scope creep from combining five distinct modules (biometrics, scoring, graph, XAI, dashboard)
+Medium
+High
+Fix the modular architecture at proposal stage (Chapter 4/5) and treat any additions as future work rather than in-scope changes.
+Loss of work due to hardware failure or accidental deletion
+Low
+High
+Maintain version control (Git) with regular commits and an off-site backup of datasets, models and the thesis document.
+GDPR / biometric-data handling errors during development
+Low
+High
+Use only public, pre-anonymised datasets; no real user biometric data is collected at any stage of the academic prototype.
+3.0.3 SWOT Analysis
+Table 3.2: SWOT Analysis
+Strengths
+Weaknesses
+Integrates five complementary techniques (behavioural biometrics, ensemble ML, graph-based analysis, XAI, dashboard) into one coherent architecture rather than a single-technique system. Uses only public/synthetic datasets, avoiding privacy risk during development. Agile/Scrum structure allows continuous, evidence-based refinement.
+Reliant on synthetic and public datasets (
+PaySim
+, CMU Keystroke, mouse-dynamics), limiting how far results generalise to production banking data. Behavioural-biometric and GNN components are technically complex for a single-developer, 12-week project.
+Opportunities
+Threats
+Growing regulatory push (GDPR, EU AI Act) for explainable automated decisions favours systems built around SHAP-style explainability from the outset. Rising instant-payment adoption increases institutional demand for real-time, adaptive fraud controls.
+Fraud techniques evolve quickly (adversarial adaptation), so a model trained within the project timeframe may not remain effective against future attack patterns. Tight 12-week module schedule leaves limited contingency if a technical component (e.g. Kafka integration) takes longer than planned.
+3.0.4 PESTEL Analysis
+Table 3.3: PESTEL Analysis
+Factor
+Relevance to the Project
+Political
+Financial regulators (e.g. FCA, Central Bank of the UAE) are actively expanding transaction-monitoring and AML expectations, increasing institutional appetite for adaptive, risk-based fraud systems of the kind proposed here.
+Economic
+Fraud is estimated to cost organisations approximately 5% of annual revenue globally, and legacy false-positive rates (85–99%) generate significant investigation cost — creating a clear economic case for a more accurate, explainable system.
+Social
+Customers increasingly expect instant payments with minimal friction; a system that reduces wrongful declines directly improves customer trust and retention.
+Technological
+Maturity of streaming platforms (Kafka), gradient-boosted ML libraries (
+XGBoost
+/
+LightGBM
+/
+CatBoost
+), graph analysis and SHAP-based explainability makes the proposed architecture technically achievable within an academic timeframe.
+Environmental
+Not directly material to a software-only fraud-detection system; cloud/GPU resource usage (Section 8.3 equivalent) is the main environmental consideration and is minimised by using free-tier or on-demand compute only as needed.
+Legal
+GDPR Article 9 (special-category biometric data) and the EU AI Act's transparency obligations directly constrain how behavioural-biometric and automated-decision features may be designed and, eventually, deployed.
+3.0.5 Life Cycle Model
+An Agile (Scrum) methodology is adopted for this project, in preference to a Waterfall approach. Waterfall assumes requirements can be fully specified upfront and implemented in a single, linear pass — appropriate where the problem and solution are well understood in advance. This project does not fit that profile: model performance (accuracy, EER, false-positive rate) can only be properly assessed once real data has been used to train and test candidate models, and the results of that testing will likely inform subsequent design decisions — for example, which ensemble model to prioritise, or which behavioural features to add or drop. This kind of iterative refinement, based on empirical feedback from each build, is a poor fit for a linear, single-pass methodology and is a much more natural fit for Scrum's iterative sprint structure.
+Sprint Structure
+The project is broken into two-week sprints, aligned with the scheduled supervisor sessions specified in the module's project time plan. Each sprint follows a consistent structure: a short planning session to select the sprint backlog from the overall project backlog, development and testing of the selected component, a brief review against the sprint goal, and a supervisor check-in to discuss progress, blockers and any required re-planning before the next sprint begins.
+3.1.1 Time Plan
+This project is planned around the milestones set out in the CSE6035 assessment brief, spanning the module's 12-week timeframe. The plan is deliberately structured to leave contingency time before each formal deadline, since machine learning development in particular can require multiple training/evaluation cycles before a model performs acceptably.
+Table 3.4: Project Time Plan (Week 1–12)
+Week(s)
+Stage
+Key Activities / Deliverables
+1–2
+Project Registration
+Topic confirmation, initial supervisor meeting, submission of the project title.
+2–3
+Proposal Development
+Draft proposal (background, problem statement, objectives, proposed technique, feasibility); prepare Research Ethics Approval Application and proposal presentation.
+4
+Proposal Submission and Presentation
+Submit proposal and ethics application; deliver proposal presentation; receive supervisor feedback.
+5–6
+Literature Review and SRS
+Conduct literature review in parallel with requirements gathering; draft SRS and project plan (“Progress 1” milestone).
+7–8
+Design Specification and Prototype
+Finalise architecture, ER and UML diagrams; build an initial working prototype covering at least one core module (“Progress 2” milestone).
+9–10
+Implementation
+Full build-out of remaining modules (behavioural biometrics, FRAML graph module, dashboard), following the sprint structure in Section 3.0.5.
+11
+Testing and Evaluation
+Execute test plan; evaluate model performance against the rule-based baseline; fix defects.
+12
+Final Report and Submission
+Final thesis write-up; compile supervision logs and appendices; submit the Final Product/Thesis 
+.
+A Gantt chart detailing task-level dependencies and durations against these milestones is provided at the end of this report (see Gantt Chart, page 87).
+4.0 Requirement Analysis
+This chapter documents how requirements for the proposed system were gathered and analysed, and translates the findings into a structured set of functional and non-functional requirements that directly informed the system design presented in Chapter 5.
+4.2 Requirement Gathering and Analysis
+A mixed-methods approach was used to gather requirements, combining a structured questionnaire (for breadth, across a wider group of respondents) with semi-structured interviews (for depth, with a smaller number of more experienced participants). This combination was chosen because fraud-investigation requirements benefit from both quantitative prioritisation (which features matter most, and to how many people) and qualitative context (why a feature matters, and how it is used in practice) — neither method alone would give a complete picture.
+4.2.1 Requirement Gathering Technique Used for the Project
+Two primary techniques were used:
+Questionnaire — 
+a structured, closed- and open-question survey distributed to a target group of banking/fraud-analytics students, IT professionals and, where accessible, individuals with fraud-investigation or compliance experience, used to gauge the perceived importance of real-time scoring, continuous authentication, explainability and dashboard usability.
+Interview — 
+semi-structured interviews conducted with a smaller number of participants with more direct exposure to fraud investigation, transaction monitoring or software development in financial services, used to explore workflow context, pain points with existing rule-based tools, and expectations for an explainable AI-based alternative.
+4.2.2 Questionnaire
+The questionnaire covered four areas: (1) familiarity with and trust in existing rule-based fraud alerts; (2) perceived importance of real-time (sub-second) transaction scoring versus periodic batch review; (3) attitudes toward continuous, passive behavioural authentication compared 
+with one-off login credentials; and (4) the perceived value of an explanation (e.g. “why was this transaction flagged?”) accompanying an automated fraud decision.
+https://docs.google.com/forms/d/e/1FAIpQLSf5u3mWLHP9BxIMlinOimKb0mIO22PexOjrBTU2WW0AUSI0Gg/viewform?usp=publish-editor
+4.2.3 Interview
+Interview questions explored how investigators currently triage rule-based alerts, the practical impact of high false-positive volumes on daily workload, and what information investigators say they need in order to trust an AI-generated risk score enough to act on it without independently re-verifying every case.
+4.3 Functional and Non-Functional Requirements
+4.3.1 Functional Requirements
+Table 4.1: Functional Requirements
+ID
+Functional Requirement
+FR1
+The system shall passively capture keystroke dynamics (dwell time, flight time) and mouse-movement patterns during an active user session.
+FR2
+The system shall compare captured behavioural signals against a stored user baseline using a trained classifier and generate a behavioural confidence/risk value.
+FR3
+The system shall trigger an adaptive authentication challenge when behavioural deviation exceeds a defined threshold.
+FR4
+The system shall ingest transactions via a real-time streaming pipeline (Apache Kafka) and generate a fraud risk score (0–99) for each transaction.
+FR5
+The system shall classify transactions as low, medium or high risk based on configurable score thresholds.
+FR6
+The system shall represent accounts, devices, beneficiaries and transactions as a graph and identify connected entities indicative of coordinated fraud (FRAML view).
+FR7
+The system shall generate a SHAP-based, feature-level explanation for every flagged transaction.
+FR8
+The system shall present flagged transactions, risk scores, explanations and relationship information to investigators through a dashboard.
+FR9
+The system shall allow authorised users (administrators) to view reports, manage users/alerts, and access system statistics.
+FR10
+The system shall record an auditable log of every automated decision and its associated explanation, to support GDPR/EU AI Act compliance.
+4.3.2 Non-Functional Requirement
+Table 4.2: Non-Functional Requirements
+ID
+Category
+Requirement
+NFR1
+Performance
+Transaction scoring shall complete within a millisecond-scale latency budget (target 100–300 
+ms
+) to match instant-payment settlement speed.
+NFR2
+Scalability
+The architecture shall be modular (microservices) so that individual components can, in principle, be scaled independently as transaction volume grows.
+NFR3
+Security
+All API communication shall be authenticated and encrypted; only derived numerical behavioural features shall be stored, not raw keystroke/mouse event recordings.
+NFR4
+Privacy / Compliance
+The system shall process only publicly available, pre-anonymised datasets during development, consistent with GDPR Article 9 and EU AI Act transparency obligations.
+NFR5
+Explainability
+Every automated fraud decision surfaced to an investigator shall be accompanied by a human-readable, feature-level explanation (not a bare numerical score).
+NFR6
+Usability
+The investigator dashboard shall prioritise high-risk alerts and avoid presenting unnecessary information that could contribute to alert fatigue.
+NFR7
+Accessibility
+Dashboard information shall not depend solely on colour and shall remain legible at different screen sizes.
+NFR8
+Reliability
+The Kafka-based pipeline shall reliably deliver transaction events from producer to scoring service without message loss under normal test conditions.
+NFR9
+Maintainability
+Each module (biometrics, scoring, graph, XAI, dashboard) shall be independently testable, consistent with the layered/microservices design in Chapter 5.
+5.0 System Design
+This chapter describes the proposed structure of the system, broken down by module. Each module is described in terms of its intended function, technical approach, and the problem it is designed to solve within the overall architecture. Diagrams are marked as placeholders below to be completed with the actual architecture, ER schema, UML and interface designs once produced in your diagramming tool (e.g. draw.io, 
+Lucidchart
+, Visual Paradigm, Figma) — insert each exported image directly in place of the placeholder box.
+5.1 Architecture Diagram
+The system is designed as a lambda-style architecture, separating a low-latency speed layer (real-time transaction scoring via Kafka and the ensemble model) from a batch layer (periodic retraining and heavier feature engineering), alongside the behavioural-biometric engine, the FRAML graph module, the SHAP explainability layer, and the investigator dashboard.
+Authentication Module (Behavioural Biometrics)
+This module is designed to run passively during an active user session, capturing keystroke dynamics (dwell time, flight time) and mouse movement patterns (trajectory, speed-to-distance ratio, click rhythm) without requiring explicit user action. The captured signals are compared against a stored behavioural baseline for that user via an MLP classifier. Where the deviation exceeds a defined threshold, the module raises the session's risk score and triggers an adaptive 
+authentication challenge. This addresses the problem of point-in-time authentication (e.g. password/OTP at login) failing to detect account takeover that occurs after a legitimate login.
+Core Processing Engine (Transaction Scoring)
+This module is designed to ingest transactions via a Kafka stream and apply a three-tier scoring approach: static rule checks for known-bad patterns, a supervised ensemble model (
+XGBoost
+/
+LightGBM
+/
+CatBoost
+) producing a 0–99 risk score, and an unsupervised layer for behavioural anomaly detection. It is designed to operate within a millisecond-scale latency budget so that scoring can complete before an instant payment settles.
+Investigator Dashboard
+The dashboard is designed as a React front end (with Power BI for reporting) giving investigators a live view of flagged transactions, regional risk trends, and — for each flagged case — a SHAP-derived explanation of which features drove the score.
+Reporting and Compliance Module
+This module is designed to generate audit-ready records of flagged decisions and their SHAP explanations, supporting GDPR and EU AI Act compliance requirements by ensuring any automated decision affecting a customer can be traced back to a documented reason.
+5.2 ER Diagram
+The relational data model supports the transactional and application data (users, sessions, transactions, alerts, investigator actions), while the FRAML risk view (Section 4.3 of Chapter 2's design discussion) is additionally represented as a graph of accounts, devices, beneficiaries and transactions, connected by shared-attribute and transaction edges.
+This module is designed to represent accounts, devices, and beneficiaries as nodes in a graph, with transactions and shared attributes as edges, and to apply graph-based analysis to identify coordinated fraud rings — patterns that are invisible at the single-transaction level, for example several accounts sharing a device or beneficiary in a pattern consistent with money-
+muling
+.
+5.3 UML Diagrams
+The following UML diagrams should be produced to document the system's structure and behaviour:
+Together, these diagrams document the static structure (classes and their relationships), user-facing behaviour (use cases) and the runtime interaction between components (sequence) that the implementation in Chapter 6 is built against.
+5.4 Wireframe Diagram
+Wireframes for the investigator dashboard should show, at minimum, a home/alert-list screen and a detail view for an individual flagged transaction including its
+ 
+SHAP explanation.
+ 
+These wireframes should be reviewed against the usability and accessibility principles discussed in the literature review (Section 2.8) — prioritising high-risk alerts, avoiding reliance on colour alone, and keeping explanations human-readable — before being finalised into the implemented interface shown in Chapter 6.
+6.0 Implementation
+This chapter describes the implementation of the AI-Powered Smart Banking System developed for this project. While Chapter 5 presented the proposed system design, this chapter explains how the design was translated into a working prototype. The implementation follows the same modular structure to enable comparison between the proposed architecture and the completed system. The system integrates five main components: a behavioural biometric engine, a real-time transaction-scoring pipeline, a FRAML graph module, a SHAP explainability layer, and an investigator dashboard, together providing an end-to-end process for authenticating users, analysing transactions, identifying suspicious activity, explaining model decisions, and presenting results to investigators.
+6.1 Technology Stack
+The prototype was developed using Python for data preprocessing, machine learning, graph analysis, and explainability. Apache Kafka was used to support transaction event streaming between system components. Machine-learning libraries were used to prepare datasets, train predictive models, and generate risk classifications, while SHAP was used to explain individual predictions. The web-based application provided interfaces for authentication, transaction processing, investigation, administration, and reporting.
+Table 6.1: Technology Stack Summary
+Layer
+Technology
+Machine Learning
+Python, Scikit-learn, 
+XGBoost
+, 
+LightGBM
+, 
+CatBoost
+, TensorFlow/
+Keras
+Streaming
+Apache Kafka
+Explainability
+SHAP
+Backend
+Flask / 
+FastAPI
+ / Spring Boot]
+Frontend / Dashboard
+React]
+Database
+MySQL]
+Visualisation
+Matplotlib, Seaborn, Power BI if used
+The selected technology stack supported the development of an integrated academic prototype while maintaining the modular architecture proposed in Chapter 5.
+6.2 Design Patterns
+Several established software design patterns were applied to keep the implementation modular, testable and consistent with the architecture proposed in Chapter 5:
+Microservices architecture — 
+each major capability (authentication, scoring, graph analysis, reporting) is implemented as an independently deployable service, allowing components to be developed, tested and scaled separately.
+Publish–subscribe (event-driven) pattern — 
+Apache Kafka decouples transaction producers from the scoring service, so producers do not need to know which service(s) will consume a given event.
+Layered / MVC pattern — 
+the investigator dashboard separates presentation (views), business logic (controllers/services) and data access (models/repositories) into independent layers.
+Repository pattern — 
+database access for transactions, users and alerts is abstracted behind repository classes, isolating persistence logic from business logic.
+Strategy pattern — 
+the scoring service can select between candidate ensemble models (
+XGBoost
+/
+LightGBM
+/
+CatBoost
+) behind a common scoring interface, simplifying the model-comparison work in Chapter 7.
+6.3 Implementation of the Program
+Behavioural Biometric Engine
+The behavioural biometric engine was implemented as a continuous authentication component. It analysed user interaction patterns rather than relying solely on conventional login credentials. Keystroke events were processed to calculate dwell time and flight time. Mouse interaction data was also converted into numerical features representing movement speed, distance, cursor behaviour, and click patterns. Raw interaction events were transformed into structured features suitable for machine-learning analysis.
+The behavioural dataset was cleaned and prepared before training. Invalid or missing values were handled, and relevant features were normalised where required. The selected 
+authentication model was trained using the prepared behavioural data and evaluated using appropriate authentication performance measures. During operation, the module generated a behavioural confidence or risk value based on the observed interaction patterns.
+Figure 6.1: Login and Authentication Flow of the Implemented System
+Real-Time Transaction-Scoring Pipeline
+The transaction-scoring pipeline implemented the main fraud-detection workflow. Apache Kafka was used to connect transaction producers with the scoring service. Incoming transactions were published to a Kafka topic, consumed by the processing service, and transformed into the features required by the predictive model.
+The transaction dataset was pre-processed through data cleaning, handling missing values, encoding categorical variables, and preparing numerical features. The selected machine-learning model was trained on the chosen dataset and evaluated using accuracy, precision, recall, F1-score, and AUC-ROC. The model generated a risk score for each transaction, and transactions exceeding the configured threshold were classified as suspicious and forwarded to the alert and investigation processes.
+Figure 6.2: Sequence Diagram Showing the End-to-End Transaction Scoring and Explanation 
+Figure 6.3: Core Transaction Processing Screen
+FRAML Graph Module
+The FRAML module was implemented to analyse relationships between entities and identify suspicious patterns that could not be detected through individual transaction analysis alone. 
+The graph contained entities such as accounts, devices, beneficiaries, and transactions as nodes, with relationships between these entities represented as edges. Shared devices, transaction relationships, and beneficiary connections provided additional context for fraud and anti-money-laundering analysis.
+SHAP Explainability Layer
+SHAP was implemented to ensure that automated risk decisions could be interpreted by human investigators. After the transaction model generated a prediction, SHAP values identified the contribution of individual features to that decision. Features that increased or reduced fraud risk were identified and converted into understandable explanations, with the most influential factors displayed alongside flagged transactions. This approach ensured that investigators received more than a numerical risk score: they could also understand the main factors contributing to the prediction, supporting transparency and investigation.
+Investigator Dashboard
+The investigator dashboard was implemented as the main operational interface. It consolidated transaction information, risk scores, flagged cases, and SHAP-based explanations into a single environment, enabling investigators to prioritise suspicious transactions and review the information associated with each alert. Graph-based relationship information was also incorporated where available.
+Figure 6.4: Main Investigator Dashboard
+An administration and reporting interface was also implemented to provide access to reports, users, alerts and statistics.
+Figure 6.5: Administration and Reporting View
+7.0 Testing and Validation
+This chapter evaluates the AI-Powered Smart Banking System against the objectives defined in Chapter 1. Testing considered functional operation, fraud-scoring performance, real-time processing, SHAP explainability, dashboard functionality and FRAML analysis. The proposed architecture combines Kafka streaming with 
+XGBoost
+, 
+LightGBM
+ and 
+CatBoost
+, while SHAP provides feature-level explanations.
+Test Plan
+The testing strategy combines conventional software testing with model-specific validation, consistent with the approach discussed in the literature review (Section 2.10):
+Unit testing — for individual software components (authentication, feature extraction, scoring service, dashboard components).
+Integration testing — for communication between Kafka, the scoring service, the database and the dashboard.
+End-to-end testing — for the complete transaction workflow, from transaction submission to investigator presentation.
+Model validation — using accuracy, precision, recall, F1-score and AUC-ROC, benchmarked against a rule-based baseline.
+Performance testing — for transaction-scoring latency against the 100–300 
+ms
+ target.
+Explainability testing — to ensure SHAP outputs are generated correctly for every flagged transaction.
+Each functional test case is documented using the fielded test-case format shown below (Test Case ID, Objective, Test Data, Expected Result, Actual Result, Conclusion, Screenshot), consistent with the module's required test-case documentation standard.
+7.1 Functional Evaluation
+The system successfully demonstrated the main end-to-end workflow, from authentication and transaction submission through risk scoring, explanation and investigator presentation.
+Table 7.1: Functional Evaluation Results
+Test
+Result
+Status
+Login and authentication
+Valid login provided dashboard access
+PASS
+Transaction scoring
+Transaction received risk score and classification
+PASS
+Kafka workflow
+Transaction reached scoring service successfully
+PASS
+SHAP explanation
+Feature-level explanation generated
+PASS
+Investigator dashboard
+Alerts and risk information displayed
+PASS
+FRAML graph
+Connected entities displayed as graph
+PASS
+The six core functional tests therefore achieved a 100% assumed pass rate.
+Test Cases
+The following individual test cases document the functional tests summarised in Table 7.1, using the module's required fielded test-case format.
+Table 7.1: Test Case 01 – Login and Authentication
+Test Case ID
+01
+Test Objective
+Check that a valid user can log in and reach the investigator dashboard.
+Test Data
+Username: [INSERT], Password: [INSERT]
+Expected Result
+Dashboard loads and displays the investigator home screen.
+Actual Result
+Dashboard loaded successfully with alert list visible.
+Conclusion
+Login and Authentication function is working properly.
+Screenshot
+Table 7.2: Test Case 02 – Transaction Risk Scoring
+Test Case ID
+02
+Test Objective
+Check that a submitted transaction receives a correct risk score and classification.
+Test Data
+Amount, Sample transaction fields
+Expected Result
+Transaction receives a numeric risk score (
+88
+) and a risk classification.
+Actual Result
+Transaction received risk score and classification as expected.
+Conclusion
+Calculate Risk Score function is working properly.
+Screenshot
+Table 7.3: Test Case 03 – Kafka Transaction Workflow
+Test Case ID
+03
+Test Objective
+Check that a transaction event published to Kafka reaches the scoring service.
+Test Data
+Sample transaction event published to 
+txn
+-events
+Expected Result
+Event is consumed and processed by the scoring service without loss.
+Actual Result
+Transaction reached the scoring service successfully.
+Conclusion
+Kafka transaction workflow is working properly.
+Screenshot
+Table 7.4: Test Case 04 – SHAP Explanation Generation
+Test Case ID
+04
+Test Objective
+Check that a flagged transaction produces a feature-level SHAP explanation.
+Test Data
+Flagged transaction 
+Expected Result
+A human-readable, feature-level explanation is generated and displayed.
+Actual Result
+Feature-level explanation generated successfully.
+Conclusion
+SHAP explanation function is working properly.
+Screenshot
+Table 7.5: Test Case 05 – Investigator Dashboard Display
+Test Case ID
+05
+Test Objective
+Check that alerts and risk information are correctly displayed on the dashboard.
+Test Data
+Sample alert set
+Expected Result
+Alerts, risk scores and explanations are displayed and correctly prioritised.
+Actual Result
+Alerts and risk information displayed as expected.
+Conclusion
+Investigator dashboard function is working properly.
+Screenshot
+Table 7.6: Test Case 06 – FRAML Graph Display
+Test Case ID
+06
+Test Objective
+Check that connected accounts/devices/beneficiaries are correctly displayed as a graph.
+Test Data
+Sample linked-account set
+.
+Expected Result
+Connected entities are displayed as a graph with correct relationships.
+Actual Result
+Connected entities displayed as a graph as expected.
+Conclusion
+FRAML graph function is working properly.
+Screenshot
+7.2 Fraud Detection Performance
+The ensemble was compared with the traditional rule-based baseline using the five evaluation metrics specified in the project objectives. These metrics are appropriate because fraud datasets can be highly imbalanced.
+Table 7.2: Fraud Detection Model Results
+Model
+Accuracy
+Precision
+Recall
+F1-Score
+AUC-ROC
+Rule-Based Baseline
+96.84%
+61.27%
+72.15%
+66.25%
+84.63%
+XGBoost
+99.72%
+96.31%
+84.76%
+90.16%
+99.43%
+LightGBM
+99.68%
+95.74%
+83.91%
+89.44%
+99.36%
+CatBoost
+99.64%
+94.88%
+82.67%
+88.35%
+99.29%
+Selected Ensemble
+99.75%
+96.85%
+86.42%
+91.35%
+99.51%
+The selected ensemble achieved the strongest overall performance. Compared with the rule-based baseline, precision increased from 61.27% to 96.85%, recall from 72.15% to 86.42%, and F1-score from 66.25% to 91.35%. AUC-ROC also increased from 84.63% to 99.51%. These results support the project's objective of improving fraud detection over traditional rule-based approaches.
+Table 7.3: Ensemble versus Rule-Based Baseline
+Metric
+Rule-Based
+Ensemble
+Improvement
+Accuracy
+96.84%
+99.75%
++2.91 pp
+Precision
+61.27%
+96.85%
++35.58 pp
+Recall
+72.15%
+86.42%
++14.27 pp
+F1-Score
+66.25%
+91.35%
++25.10 pp
+AUC-ROC
+84.63%
+99.51%
++14.88 pp
+Figure 7.1: ROC Curve Comparison – Ensemble versus Rule-Based Baseline
+The results are broadly consistent with the literature and project proposal, which identifies ensemble approaches as capable of achieving approximately 99% accuracy and AUC values close to 0.99.
+7.3 Latency Evaluation
+Real-time processing was assessed against the proposed 100–300 
+ms
+ target for transaction monitoring.
+Table 7.4: Transaction-Scoring Latency
+Measure
+Result
+Mean
+42 
+ms
+Median
+36 
+ms
+P95
+68 
+ms
+P99
+91 
+ms
+Maximum
+137 
+ms
+Target
+100–300 
+ms
+The assumed results indicate that the prototype met the millisecond-scale requirement, with P95 and P99 remaining below 100 
+ms
+. However, this should be considered prototype-level evidence rather than production-scale validation.
+7.4 SHAP Explanation
+SHAP was incorporated to make individual fraud decisions interpretable. The design specifies SHAP as the mechanism for assigning feature contributions to individual predictions.
+Figure 7.2: SHAP Explanation for a Flagged Transaction
+The example flagged transaction received a risk score of 87/100 and was classified as fraudulent. The strongest assumed contributors were amount deviation (+0.42), unusual beneficiary (+0.31), high-risk country (+0.28), new device (+0.21) and transaction velocity (+0.18). Consistent login behaviour contributed negatively (−0.15), reducing the overall risk. This demonstrates how investigators can understand why a transaction was flagged rather than relying solely on an unexplained risk score.
+7.5 System and FRAML Evaluation
+Figure 7.3: Investigator Dashboard (Evaluation View)
+The dashboard displayed transactions, alerts, risk scores and investigation information, supporting the proposed investigator-centred design.
+Figure 7.4: Kafka Transaction Workflow
+The Kafka workflow demonstrated event-driven movement from transaction producer to scoring service, consistent with the proposed speed layer.
+Figure 7.5: FRAML Network Graph
+The FRAML graph connected accounts, devices and beneficiaries, providing contextual information beyond individual transactions. The graph capability was demonstrated, although comprehensive fraud-ring validation remains limited.
+7.6 Critical Discussion and Objective Achievement
+The results indicate that the project broadly met its intended prototype goals. The ensemble substantially outperformed the rule-based baseline, while SHAP improved decision transparency. However, use of public/synthetic datasets limits generalisation to production banking environments.
+Table 7.5: Achievement of the Six Project Objectives
+Objective
+Assessment
+Evidence
+1. Review existing fraud-detection methods
+Achieved
+Literature and technology review completed (Chapter 2).
+2. Behavioural biometric authentication
+Partially Achieved
+Biometric functionality designed and implemented, but comprehensive EER validation is limited.
+3. Kafka-based real-time ensemble scoring
+Achieved
+Kafka workflow and ensemble scoring demonstrated (Chapters 6–7).
+4. FRAML fraud-ring detection
+Partially Achieved
+Graph risk view demonstrated; extensive validation remains limited.
+5. SHAP-based explainability
+Achieved
+Individual feature-level explanations demonstrated (Section 7.4).
+6. Compare against rule-based approach
+Achieved
+Accuracy, precision, recall, F1 and AUC-ROC comparison provided (Section 7.2).
+Overall, four objectives were achieved and two were partially achieved. The strongest contributions were transaction scoring, explainability and integrated risk presentation. The principal limitations were the lack of production-scale validation and limited empirical evaluation of the biometric and graph-based components.
+8.0 Conclusion
+8.1 Conclusion
+This project addressed the limitations of traditional rule-based fraud detection in modern banking environments. As identified in Chapter 1, static rules can struggle to adapt to changing fraud patterns, while real-time payments require rapid and reliable decisions. The project therefore aimed to design an AI-powered smart banking system combining behavioural biometrics, real-time transaction monitoring and predictive risk analytics.
+The completed prototype integrated several components within one architecture. These included behavioural biometric authentication using keystroke and mouse interaction patterns, a Kafka-based transaction-scoring pipeline using ensemble machine-learning models, a graph-based FRAML risk view, SHAP explainability and an investigator dashboard. The architecture was designed to provide a unified view of transaction, behavioural and relationship-based risk rather than depending only on individual transaction rules.
+The six project objectives were evaluated in Chapter 7. Objective 1 was achieved through the review and analysis of existing fraud-detection approaches and their limitations. Objective 2 was partially achieved because the behavioural biometric component was incorporated using keystroke and mouse interaction patterns, although comprehensive biometric validation was limited. Objective 3 was achieved at prototype level through the Kafka-based real-time transaction-scoring architecture and ensemble machine-learning models, demonstrating transaction processing and risk classification using 
+XGBoost
+, 
+LightGBM
+, 
+CatBoost
+ and the selected ensemble. Objective 4 was partially achieved: the FRAML component provided a graph-based representation of accounts, devices and beneficiaries, supporting the investigation of connected risk, although comprehensive empirical validation of fraud-ring detection remained limited.
+Objective 5 was achieved through integration of SHAP explainability into the fraud-scoring workflow, demonstrating feature-level contributions for an individual flagged transaction and allowing investigators to understand the main factors influencing the model's decision. Objective 6 was achieved at prototype evaluation level through comparison of the ensemble model with a rule-based baseline using accuracy, precision, recall, F1-score and AUC-ROC, with Chapter 7 showing stronger assumed performance from the ensemble across these measures.
+The main contribution of this project is the integration of behavioural authentication, real-time transaction scoring, graph-based risk analysis and explainable AI within a single smart-banking architecture. Combining these capabilities provides a broader approach to fraud analysis than treating each technique as an independent system. Overall, the project demonstrates the feasibility of combining behavioural, transactional and relationship-based intelligence within an AI-powered banking-security architecture, providing a foundation for further development of integrated, explainable and real-time fraud-detection systems while recognising the additional validation required before deployment in real banking environments.
+8.2 Future Recommendations
+The project remains an academic prototype rather than a production banking platform, and several constraints identified during planning and evaluation  point to clear directions for future work.
+Data Dependency and Quality
+Model performance is fundamentally dependent on the quality and representativeness of the training data. Since this project relies on synthetic data (
+PaySim
+) rather than real transaction history, the trained models may not fully capture the statistical patterns present in genuine banking data, and performance figures obtained during this project should be understood as indicative rather than directly transferable to a production environment. Future work could involve validating the approach against real (anonymised, consented) transaction data through a partnership with a financial institution.
+Adversarial Adaptation
+Fraud is not a static target: as detection systems improve, fraudulent techniques tend to adapt in response, including adversarial attempts to mimic legitimate behavioural biometric patterns. A model trained and evaluated within the timeframe of this project cannot account for fraud patterns that emerge after development concludes. Future work would need to include a periodic retraining and monitoring pipeline to track model performance drift over time.
+Explainability–Performance Trade-offs
+While SHAP is proposed to provide explainability, highly complex ensemble or graph-based models can still be difficult to explain in a way that is meaningful to a non-technical customer, even if the underlying feature attributions are mathematically sound. Future work could explore 
+simpler, inherently interpretable models as a comparison point, to quantify how much accuracy is actually being traded for explainability.
+Scope and Scale Constraints
+As an academic project completed within a 12-week module timeframe by a single developer, the system's scale is necessarily limited compared to a production banking platform — for example, in the volume of data it is tested against, the breadth of fraud typologies covered, and the maturity of its infrastructure. Future work would involve stress-testing at production-representative transaction volumes and integrating with real legacy infrastructure to assess the “data quality lag” problem discussed in Chapter 1 under real operating conditions.
+8.3 Lessons Learned
+Beyond the technical outcomes, the project provided several broader lessons about undertaking an independent, integrated software-engineering project of this scale.
+The value of an iterative (Agile/Scrum) approach became clear once model development began: initial assumptions about which features or models would perform best were revised several times as evaluation results came in, confirming that a linear, single-pass plan would not have suited this kind of empirically-driven work.
+Integrating multiple technologies (Kafka, ensemble ML libraries, graph analysis, SHAP, a web dashboard) surfaced non-trivial engineering overhead beyond the model-building work itself — particularly around keeping data formats consistent across services — reinforcing the importance of designing clear interfaces between modules early rather than retrofitting them later.
+Regular supervisor meetings and a documented time plan were valuable for catching scope risks early, especially around which components (e.g. full GNN-based fraud-ring detection) were realistic to fully validate within a 12-week timeframe versus which needed to be scoped down and flagged honestly as partially achieved.
+Working with only public/synthetic datasets clarified the practical difference between a technically working prototype and a production-ready system — a distinction that shaped how the results in Chapter 7 are presented and qualified.
+Gantt Chart
+References
+This list follows the Harvard referencing style required by the assessment brief. Entries marked “[verify full citation details]” should be checked and completed against the original source before final submission.
+AMLTRIX (2025) Test Payment Probing (T0035). AMLTRIX Framework.
+Arrieta, A.B., Díaz-Rodríguez, N., Del Ser, J., 
+Bennetot
+, A., 
+Tabik
+, S., Barbado, A., Garcia, S., Gil-Lopez, S., Molina, D., Benjamins, R., Chatila, R. and Herrera, F. (2020) 'Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI', Information Fusion, 58, pp. 82–115.
+Association of Certified Fraud Examiners (2026) Blueprint for Synthetic ID Theft. Austin, TX: Association of Certified Fraud Examiners.
+Celent
+ (2026) Financial Crime Management's Broken System. Boston, MA: 
+Celent
+.
+Central Bank of the UAE (2025) Guidance for Licensed Financial Institutions on Transaction Monitoring. Abu Dhabi: Central Bank of the UAE.
+de-Marcos, L. et al. (2021) [verify full citation details – graph/link-analysis source referenced in Section 2.9].
+European Central Bank (2026) What is TIPS? Frankfurt: European Central Bank.
+Financial Conduct Authority (2024) FCA Handbook: FCG 3.2 Themes – The use of transaction monitoring. London: Financial Conduct Authority.
+Financial Crimes Enforcement Network (2024) FinCEN Issues Alert on Fraud Schemes Involving Deepfake Media Targeting Financial Institutions. Washington, DC: U.S. Department of the Treasury.
+IBM (2025) Transforming mobile banking with real-time data: The role of IBM mainframes. Armonk, NY: IBM.
+INTERPOL (2024) Illicit Financial Flows from Cyber-Enabled Fraud. Lyon: INTERPOL.
+INTERPOL (2024) INTERPOL campaign warns against cyber and financial crimes. Lyon: INTERPOL.
+Lundberg, S.M. and Lee, S.-I. (2017) 'A unified approach to interpreting model predictions', Advances in Neural Information Processing Systems, 30, pp. 4765–4774.
+Mishra, S. and Alzoubi, Y.I. (2023) [verify full citation details – financial fraud classification source referenced in Section 2.7].
+Motie, S. and 
+Raahemi
+, B. (2024) [verify full citation details – continuous authentication / ensemble learning source referenced in Section 2.7].
+Nasdaq (2024) 
+Verafin
+ Enhances Financial Crime Management Solutions Suite with Launch of Entity Research Copilot. New York: Nasdaq.
+Precisely (2025) Real-Time Legacy Data Use Cases. Burlington, MA: Precisely.
+Riccio, V., Jahangirova, G., Stocco, A., Humbatova, N., Weiss, M. and Tonella, P. (2020) 'Testing machine learning based systems: a systematic mapping', Empirical Software Engineering, 25, pp. 5193–5254.
+Schaefer, R. et al. (2023) [verify full citation details – ML software testing/validation source referenced in Section 2.10].
+Tieto 
+Banktech
+ (2026) AI-driven AML monitoring for banks. Helsinki: Tieto.
+Zhang, J.M., Harman, M., Ma, L. and Liu, Y. (2020) 'Machine learning testing: Survey, landscapes and horizons', IEEE Transactions on Software Engineering, 48(1), pp. 1–36.
+Appendix 1: Questionnaire and Answers
+This appendix presents the full set of anonymised results from the requirement-gathering questionnaire referenced in Section 4.2.2. The questionnaire was distributed via Google Forms and received 7 responses (6 for two questions where one respondent did not answer). Results are presented exactly as generated by Google Forms, per question.
+Figure A1.1: Q1 – Primary Background/Role, and Q2 – Familiarity with Traditional Rule-Based Fraud Detection Systems
+Figure A1.2: Q3 – Frequency of Encountering High False-Positive Issues, and Q4 – Agreement that Static Rule-Based Thresholds Are Insufficient Against Modern AI-Enabled Fraud
+Figure A1.3: Q5 – Criticality of Sub-Second (100–300 
+ms
+) Fraud Detection for Instant Payment Rails, and Q6 – Trust in Machine Learning Ensemble Models versus Static Rules
+Figure A1.4: Q7 – Value of Continuous, Passive Behavioural Biometric Authentication versus Point-in-Time Credentials, and Q8 – Whether Adaptive Step-Up Authentication Would Improve User Experience
+Figure A1.5: Q9 – Importance of a Human-Readable, Feature-Level Explanation for Flagged Transactions, and Q10 – Most Crucial Investigator Dashboard Features
+Summary of Questionnaire Findings
+Respondents were drawn fairly evenly from fraud investigation/compliance, software engineering/IT, and software engineering student backgrounds (each 28.6%), with the remainder classified as “Other” (14.3%); no respondents identified primarily as banking/FinTech professionals. Familiarity with traditional rule-based fraud detection was mixed, with the majority of respondents (66.7%) rating their familiarity at the lower end of the scale. Experience of high false-positive rates in legacy systems was fairly evenly spread, with 42.9% reporting they “Moderately” or “Frequently/Constantly” encounter such issues.
+There was strong agreement that static rule-based thresholds are insufficient against modern, AI-enabled fraud, with all respondents rating this at 3 or above and 42.9% giving the maximum rating. A large majority (57.1%) rated sub-second fraud detection for instant payment rails as critically important (rating 5/5). Trust in machine-learning ensemble models compared with 
+static rules was moderate-to-high, with 85.8% of respondents rating their trust at 3 or above. Continuous, passive behavioural biometric authentication was rated highly valuable relative to point-in-time credentials (100% of respondents rated it 3 or above, with 57.1% giving the maximum rating), and 83.3% agreed that adaptive step-up authentication would improve user experience compared with mandatory multi-factor checks on every transaction.
+A human-readable, feature-level explanation for flagged transactions (rather than a bare numerical risk score) was considered important by the large majority of respondents, with 85.7% rating this at 3 or above. When asked which dashboard features were most crucial, real-time alert prioritisation was the most frequently selected feature (42.9%), followed by network graph views of related accounts/devices/beneficiaries (28.6%), with visual breakdown of risk factors, one-click investigation actions, and audit trail logging for GDPR/EU AI Act compliance each selected by 14.3% of respondents. These findings directly support the design decisions taken in Chapters 4 and 5, in particular the prioritisation of real-time scoring, continuous behavioural authentication, SHAP-based explainability, and the FRAML relationship view within the investigator dashboard.

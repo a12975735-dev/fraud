@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keystroke Dynamics Demo</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 680px; margin: 5rem auto; padding: 0 1rem; color: #1f2937; }
+    input { box-sizing: border-box; width: 100%; padding: .8rem; border: 1px solid #9ca3af; border-radius: .4rem; font-size: 1rem; }
+    button { margin-top: 1rem; padding: .7rem 1rem; background: #1d4ed8; color: white; border: 0; border-radius: .4rem; cursor: pointer; }
+    #result { margin-top: 1.25rem; padding: .9rem; background: #f3f4f6; border-radius: .4rem; white-space: pre-wrap; }
+    .privacy { color: #4b5563; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Keystroke Dynamics Demo</h1>
+  <p>Type this phrase: <strong>the quick brown fox jumps over the lazy dog</strong></p>
+  <input id="phrase" type="text" autocomplete="off" spellcheck="false" aria-label="Type the requested phrase">
+  <button id="submit" type="button">Submit timing</button>
+  <p class="privacy">Only aggregate timing values are sent to your local API. The typed text is never transmitted.</p>
+  <div id="result" aria-live="polite">Start typing to capture keystroke timing.</div>
+
+  <script src="biometrics.js"></script>
+  <script>
+    const input = document.getElementById("phrase");
+    const submit = document.getElementById("submit");
+    const result = document.getElementById("result");
+    const keydownTimes = new Map();
+    const dwellTimes = [];
+    const flightTimes = [];
+    let previousKeyupTime = null;
+
+    input.addEventListener("keydown", (event) => {
+      if (event.repeat) return;
+      const now = performance.now();
+      if (previousKeyupTime !== null) flightTimes.push(now - previousKeyupTime);
+      keydownTimes.set(event.code, now);
+    });
+
+    input.addEventListener("keyup", (event) => {
+      const startedAt = keydownTimes.get(event.code);
+      if (startedAt === undefined) return;
+      const now = performance.now();
+      dwellTimes.push(now - startedAt);
+      previousKeyupTime = now;
+      keydownTimes.delete(event.code);
+    });
+
+    function mean(values) {
+      return values.reduce((sum, value) => sum + value, 0) / values.length;
+    }
+
+    submit.addEventListener("click", async () => {
+      if (dwellTimes.length < 2 || flightTimes.length < 1) {
+        result.textContent = "Please type at least two keys before submitting.";
+        return;
+      }
+      const payload = {
+        mean_dwell_time: mean(dwellTimes),
+        mean_flight_time: mean(flightTimes)
+      };
+      result.textContent = "Sending aggregate timing data to the local API...";
+      try {
+        const response = await fetch("http://127.0.0.1:8000/score_keystrokes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const body = await response.json();
+        if (!response.ok) throw new Error(body.detail || "The API request failed.");
+        result.textContent = `Pattern: ${body.pattern}\nConfidence: ${(body.confidence * 100).toFixed(2)}%\n` +
+          `Mean dwell: ${body.mean_dwell_time.toFixed(2)} ms\nMean flight: ${body.mean_flight_time.toFixed(2)} ms`;
+      } catch (error) {
+        result.textContent = `Unable to reach the local API: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>

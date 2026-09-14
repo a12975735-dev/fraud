@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,16 +34,19 @@ import org.springframework.web.client.RestTemplate;
 public class FraudScoringController {
 
     private static final String FASTAPI_HEALTH_URL = "http://127.0.0.1:8000/";
+    private static final String FASTAPI_SCORE_URL = "http://127.0.0.1:8000/score_transaction";
     private static final Logger logger = LoggerFactory.getLogger(FraudScoringController.class);
     private final RestTemplate restTemplate;
     private final ScoredTransactionRepository transactionRepository;
     private final TransactionProducerService transactionProducerService;
+    private final ObjectMapper objectMapper;
 
     public FraudScoringController(RestTemplate restTemplate, ScoredTransactionRepository transactionRepository,
-                                  TransactionProducerService transactionProducerService) {
+                                  TransactionProducerService transactionProducerService, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.transactionRepository = transactionRepository;
         this.transactionProducerService = transactionProducerService;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping(value = "/score_transaction", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -56,14 +61,32 @@ public class FraudScoringController {
             transaction.transaction_velocity(), transaction.amount_deviation(), transaction.balance_discrepancy(),
             transaction.biometricRiskScore(), transaction.sourceAccount(), transaction.destinationAccount(),
             transaction.deviceId(), transaction.region()));
-        transactionProducerService.publish(new TransactionMessage(
+        TransactionMessage message = new TransactionMessage(
                 transactionId, transaction.amount(), transaction.oldbalanceDest(), transaction.newbalanceDest(),
                 transaction.step(), transaction.transaction_velocity(), transaction.amount_deviation(),
             transaction.balance_discrepancy(), transaction.type(), transaction.biometricRiskScore(),
-            transaction.sourceAccount(), transaction.destinationAccount(), transaction.deviceId(), transaction.region()));
+            transaction.sourceAccount(), transaction.destinationAccount(), transaction.deviceId(), transaction.region());
+        if (!transactionProducerService.publish(message)) {
+            scoreDirectly(message, transactionRepository.findByTransactionId(transactionId).orElseThrow());
+        }
 
         logger.info("Response status=202 endpoint=/api/score_transaction transactionId={} status=PENDING", transactionId);
-        return ResponseEntity.accepted().body(Map.of("transactionId", transactionId, "status", "PENDING"));
+        return ResponseEntity.accepted().body(Map.of("transactionId", transactionId, "status", "COMPLETED"));
+    }
+
+    private void scoreDirectly(TransactionMessage message, ScoredTransaction transaction) {
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(FASTAPI_SCORE_URL, message, String.class);
+            JsonNode scoredResponse = objectMapper.readTree(response.getBody());
+            transaction.markCompleted(scoredResponse.path("risk_score").asInt(),
+                    scoredResponse.path("risk_level").asText(),
+                    objectMapper.writeValueAsString(scoredResponse.path("top_reason_codes")), response.getBody());
+            transactionRepository.save(transaction);
+        } catch (Exception exception) {
+            logger.error("Direct FastAPI scoring failed transactionId={}", message.transactionId(), exception);
+            transaction.markFailed("{\"error\":\"Direct FastAPI scoring failed.\"}");
+            transactionRepository.save(transaction);
+        }
     }
 
     @GetMapping("/transactions")

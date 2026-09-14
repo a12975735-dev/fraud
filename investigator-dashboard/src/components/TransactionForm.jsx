@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const FASTAPI_URL = 'http://127.0.0.1:8000';
+const GATEWAY_URL = 'http://127.0.0.1:8081';
 
 export default function TransactionForm({ onTransactionSubmitted, biometricRiskScore }) {
+  const { token, isDemoMode } = useAuth();
   const [formData, setFormData] = useState({
     amount: 15420.50,
     step: 1,
@@ -12,6 +15,10 @@ export default function TransactionForm({ onTransactionSubmitted, biometricRiskS
     amount_deviation: 15.2,
     balance_discrepancy: 15420.50,
     type: 'TRANSFER',
+    sourceAccount: 'ACC-LIVE-001',
+    destinationAccount: 'DEST-LIVE-001',
+    deviceId: 'DEV-LIVE-001',
+    region: 'Local',
   });
 
   const [loading, setLoading] = useState(false);
@@ -40,14 +47,20 @@ export default function TransactionForm({ onTransactionSubmitted, biometricRiskS
       amount_deviation: Number(formData.amount_deviation || 0),
       balance_discrepancy: Number(formData.balance_discrepancy || 0),
       type: formData.type || 'TRANSFER',
+      sourceAccount: formData.sourceAccount,
+      destinationAccount: formData.destinationAccount,
+      deviceId: formData.deviceId,
+      region: formData.region,
       biometricRiskScore: biometricRiskScore ?? undefined,
     };
 
     try {
-      const response = await fetch(`${API_BASE_URL}/score_transaction`, {
+      const endpoint = isDemoMode ? `${FASTAPI_URL}/score_transaction` : `${GATEWAY_URL}/api/score_transaction`;
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && !isDemoMode ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify(payload),
       });
@@ -57,7 +70,7 @@ export default function TransactionForm({ onTransactionSubmitted, biometricRiskS
       }
 
       const data = await response.json();
-      const transactionId = `TXN-${Date.now().toString().slice(-8)}`;
+      const transactionId = data.transactionId || `TXN-${Date.now().toString().slice(-8)}`;
       setLastSubmittedId(transactionId);
 
       const newTx = {
@@ -65,7 +78,7 @@ export default function TransactionForm({ onTransactionSubmitted, biometricRiskS
         amount: payload.amount,
         step: payload.step,
         timestamp: new Date().toISOString(),
-        status: data.risk_level === 'high' ? 'FLAGGED' : 'COMPLETED',
+        status: data.status || (data.risk_level === 'high' ? 'FLAGGED' : 'COMPLETED'),
         riskScore: data.risk_score,
         riskLevel: data.risk_level,
         topReasonCodes: data.top_reason_codes || [],
@@ -93,6 +106,10 @@ export default function TransactionForm({ onTransactionSubmitted, biometricRiskS
       amount_deviation: 95.0,
       balance_discrepancy: 450000.00,
       type: 'TRANSFER',
+      sourceAccount: 'ACC-LIVE-001',
+      destinationAccount: 'DEST-LIVE-001',
+      deviceId: 'DEV-LIVE-001',
+      region: 'Local',
     });
   };
 
@@ -106,6 +123,10 @@ export default function TransactionForm({ onTransactionSubmitted, biometricRiskS
       amount_deviation: 0.1,
       balance_discrepancy: 0.0,
       type: 'PAYMENT',
+      sourceAccount: 'ACC-LIVE-001',
+      destinationAccount: 'DEST-LIVE-001',
+      deviceId: 'DEV-LIVE-001',
+      region: 'Local',
     });
   };
 

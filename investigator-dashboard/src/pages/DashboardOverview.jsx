@@ -3,6 +3,9 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Bell, ChevronDown } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
+const GATEWAY_URL = "http://127.0.0.1:8081";
 
 const TREND_DATA = [
   { t: "00:00", all: 820, flagged: 22 }, { t: "04:00", all: 610, flagged: 14 }, { t: "08:00", all: 1450, flagged: 48 },
@@ -34,6 +37,7 @@ function StatusPill({ status }) {
 
 export default function DashboardOverview() {
   const navigate = useNavigate();
+  const { token, isDemoMode } = useAuth();
   const [stats, setStats] = useState({
     total_transactions: 0,
     flagged_transactions: 0,
@@ -43,16 +47,38 @@ export default function DashboardOverview() {
   const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/dashboard/stats')
-      .then(res => res.json())
-      .then(data => setStats(data))
-      .catch(err => console.error(err));
-      
-    fetch('http://localhost:5001/api/alerts')
-      .then(res => res.json())
-      .then(data => setAlerts(data.alerts || []))
-      .catch(err => console.error(err));
-  }, []);
+    if (!token || isDemoMode) return undefined;
+
+    const headers = { Authorization: `Bearer ${token}` };
+    Promise.all([
+      fetch(`${GATEWAY_URL}/api/stats`, { headers }).then((response) => response.json()),
+      fetch(`${GATEWAY_URL}/api/transactions?page=0&size=100`, { headers }).then((response) => response.json()),
+    ])
+      .then(([statsResponse, transactionsResponse]) => {
+        const counts = statsResponse.riskLevelCounts || {};
+        setStats({
+          total_transactions: statsResponse.totalTransactionsScored || 0,
+          flagged_transactions: (counts.high || 0) + (counts.medium || 0),
+          high_risk: counts.high || 0,
+          risk_distribution: {
+            Low: counts.low || 0,
+            Medium: counts.medium || 0,
+            High: counts.high || 0,
+          },
+        });
+        setAlerts((transactionsResponse.content || [])
+          .filter((transaction) => transaction.riskLevel)
+          .map((transaction) => ({
+            id: transaction.transactionId,
+            time: new Date(transaction.timestamp).toLocaleTimeString(),
+            type: transaction.type || 'TRANSACTION',
+            score: transaction.riskScore || 0,
+            status: transaction.riskLevel === 'high' ? 'New' : 'In Review',
+          })));
+      })
+      .catch((error) => console.error('Unable to load dashboard data from the database:', error));
+    return undefined;
+  }, [isDemoMode, token]);
 
   const RISK_DATA = [
     { name: "Low (0–30)", value: stats.risk_distribution.Low, color: "#2FA36B" },
@@ -126,7 +152,7 @@ export default function DashboardOverview() {
         </div>
         <div style={{ display: "flex", gap: 16 }}>
           <div style={{ flex: 1.4, background: "#fff", borderRadius: 10, border: "1px solid #E7E9EE", padding: "16px 20px" }}>
-            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Recent Alerts (Test Set)</div>
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Recent Alerts (Live Database)</div>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
               <thead><tr style={{ color: "#9CA3AF", textAlign: "left" }}><th style={{ paddingBottom: 8, fontWeight: 600 }}>Time</th><th style={{ paddingBottom: 8, fontWeight: 600 }}>Transaction ID</th><th style={{ paddingBottom: 8, fontWeight: 600 }}>Type</th><th style={{ paddingBottom: 8, fontWeight: 600 }}>Risk Score</th><th style={{ paddingBottom: 8, fontWeight: 600 }}>Status</th></tr></thead>
               <tbody>

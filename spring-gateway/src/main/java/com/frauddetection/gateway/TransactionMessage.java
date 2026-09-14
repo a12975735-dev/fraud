@@ -11,5 +11,9 @@ public record TransactionMessage(
         Double amount_deviation,
         Double balance_discrepancy,
         String type,
-        Double biometricRiskScore) {
+        Double biometricRiskScore,
+        String sourceAccount,
+        String destinationAccount,
+        String deviceId,
+        String region) {
 }

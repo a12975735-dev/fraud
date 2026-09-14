@@ -30,9 +30,9 @@ Install these as well:
   - During installation, tick **Add Python to PATH**.
 - **Java JDK 17**: https://adoptium.net/
 - **Apache Maven**: https://maven.apache.org/download.cgi
-- **Docker Desktop**: https://www.docker.com/products/docker-desktop/
-
-Docker Desktop must be open before starting MySQL and Kafka.
+- **XAMPP**: https://www.apachefriends.org/
+  - XAMPP provides MySQL and phpMyAdmin.
+- **Docker Desktop** is optional. It is only needed if you prefer Docker instead of XAMPP.
 
 ## 3. Download the project
 
@@ -75,16 +75,37 @@ On the login screen, click **Quick Demo Sign-In**. Do not use the regular gatewa
 
 Return to the PowerShell window and press `Ctrl+C` once.
 
-## 5. Full live setup
+## 5. Full live setup with XAMPP and phpMyAdmin
 
-The full setup uses four running services. Keep one PowerShell window open for each service.
+The full setup uses XAMPP MySQL, Kafka, the Python APIs, the Spring gateway, and the dashboard.
 
-### Step 1: Start MySQL and Kafka
+### Step 1: Start MySQL in XAMPP
 
-From the project folder:
+1. Open **XAMPP Control Panel**.
+2. Click **Start** beside **MySQL**. Apache is not required for this project.
+3. Click **Admin** beside MySQL. phpMyAdmin opens in your browser, normally at **http://localhost/phpmyadmin**.
+4. In phpMyAdmin, click the **Import** tab.
+5. Choose the file `database/schema.sql` from the downloaded project folder.
+6. Click **Go** at the bottom of the page.
+
+This creates the `frauddetection` database, creates the `scored_transactions` table, adds the required columns, and inserts related sample transactions. In the left sidebar, expand `frauddetection` and then `scored_transactions` to see the data.
+
+The table includes these important columns:
+
+- `transaction_id`, `timestamp`, `amount`, `type`, and `status`
+- `risk_score`, `risk_level`, and `top_reason_codes`
+- `source_account`, `destination_account`, and `device_id`
+- `region`, `step`, `old_balance_dest`, and `new_balance_dest`
+- `transaction_velocity`, `amount_deviation`, `balance_discrepancy`, and `biometric_risk_score`
+
+Do not click **Drop** or delete the database when stopping the system. The records remain available for the next run.
+
+### Step 2: Start Kafka
+
+Kafka is used when a new transaction is submitted for live scoring. The easiest way to start it is with Docker Desktop. Open Docker Desktop, then run from the project folder:
 
 ```powershell
-docker compose up -d mysql kafka
+docker compose up -d kafka
 ```
 
 Check that they are running:
@@ -93,9 +114,9 @@ Check that they are running:
 docker compose ps
 ```
 
-Both services should show a running or healthy status.
+The `kafka` service should show a running status. Do not start the Docker `mysql` service when using XAMPP MySQL.
 
-### Step 2: Install Python packages
+### Step 3: Install Python packages
 
 From the project folder:
 
@@ -112,7 +133,7 @@ If PowerShell blocks activation, run this once in PowerShell, then repeat the ac
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 ```
 
-### Step 3: Start the Python machine-learning API
+### Step 4: Start the Python machine-learning API
 
 Open a new PowerShell window and run:
 
@@ -130,7 +151,7 @@ To check it, open this address in a browser:
 
 You should see a message saying that the Fraud Detection Scoring API is running.
 
-### Step 4: Start the credit and biometrics API
+### Step 5: Start the credit and biometrics API
 
 Open another PowerShell window and run:
 
@@ -142,7 +163,7 @@ python -m src.flask_api
 
 Leave this window open. This service uses port `5000`.
 
-### Step 5: Start the Spring Boot gateway
+### Step 6: Start the Spring Boot gateway
 
 Open another PowerShell window and run:
 
@@ -158,7 +179,7 @@ mvn spring-boot:run
 
 Leave this window open. The gateway uses port `8081`.
 
-### Step 6: Start the dashboard
+### Step 7: Start the dashboard
 
 Open one more PowerShell window and run:
 
@@ -194,13 +215,23 @@ The **Quick Demo Sign-In** button is also available if you want to use the dashb
 
 For each PowerShell window running a service, press `Ctrl+C` once.
 
-Then stop MySQL and Kafka from the project folder:
+Then stop Kafka from the project folder:
 
 ```powershell
-docker compose down
+docker compose stop kafka
 ```
 
-The database data is kept in a Docker volume. Running `docker compose up -d mysql kafka` later will reuse it.
+In XAMPP, click **Stop** beside MySQL. The database data remains in the XAMPP MySQL data folder.
+
+### Optional: use Docker for both MySQL and Kafka
+
+If XAMPP is not being used, start both services with:
+
+```powershell
+docker compose up -d mysql kafka
+```
+
+The Spring gateway is configured for MySQL port `3306`, which is also the port used by this Docker setup.
 
 ## 8. Common problems
 

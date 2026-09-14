@@ -51,11 +51,16 @@ public class FraudScoringController {
         logger.info("Incoming async score request endpoint=/api/score_transaction transactionId={} timestamp={}",
                 transactionId, Instant.now());
 
-        transactionRepository.save(new ScoredTransaction(transactionId, Instant.now(), transaction.amount()));
+        transactionRepository.save(new ScoredTransaction(transactionId, Instant.now(), transaction.amount(),
+            transaction.step(), transaction.type(), transaction.oldbalanceDest(), transaction.newbalanceDest(),
+            transaction.transaction_velocity(), transaction.amount_deviation(), transaction.balance_discrepancy(),
+            transaction.biometricRiskScore(), transaction.sourceAccount(), transaction.destinationAccount(),
+            transaction.deviceId(), transaction.region()));
         transactionProducerService.publish(new TransactionMessage(
                 transactionId, transaction.amount(), transaction.oldbalanceDest(), transaction.newbalanceDest(),
                 transaction.step(), transaction.transaction_velocity(), transaction.amount_deviation(),
-                transaction.balance_discrepancy(), transaction.type(), transaction.biometricRiskScore()));
+            transaction.balance_discrepancy(), transaction.type(), transaction.biometricRiskScore(),
+            transaction.sourceAccount(), transaction.destinationAccount(), transaction.deviceId(), transaction.region()));
 
         logger.info("Response status=202 endpoint=/api/score_transaction transactionId={} status=PENDING", transactionId);
         return ResponseEntity.accepted().body(Map.of("transactionId", transactionId, "status", "PENDING"));
@@ -143,6 +148,10 @@ public class FraudScoringController {
             @PositiveOrZero(message = "amount_deviation cannot be negative") Double amount_deviation,
             @PositiveOrZero(message = "balance_discrepancy cannot be negative") Double balance_discrepancy,
             String type,
-            @PositiveOrZero(message = "biometricRiskScore cannot be negative") Double biometricRiskScore) {
+            @PositiveOrZero(message = "biometricRiskScore cannot be negative") Double biometricRiskScore,
+            String sourceAccount,
+            String destinationAccount,
+            String deviceId,
+            String region) {
     }
 }

@@ -1,11 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import TransactionForm from "../components/TransactionForm";
 import { useNavigate } from "react-router-dom";
 import { Search, Filter, Download } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+
+const GATEWAY_URL = "http://127.0.0.1:8081";
+
+function mapTransaction(transaction) {
+  const risk = transaction.riskLevel ? transaction.riskLevel[0].toUpperCase() + transaction.riskLevel.slice(1) : "Unknown";
+  const status = transaction.status === "COMPLETED" && risk === "High" ? "Flagged" : transaction.status[0] + transaction.status.slice(1).toLowerCase();
+  return {
+    ...transaction,
+    id: transaction.transactionId,
+    amount: `$${Number(transaction.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
+    date: new Date(transaction.timestamp).toLocaleString(),
+    status,
+    risk,
+  };
+}
 
 export default function Transactions() {
   const navigate = useNavigate();
+  const { token, isDemoMode } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [showFlaggedOnly, setShowFlaggedOnly] = useState(false);
   const [createdTransactions, setCreatedTransactions] = useState([]);
@@ -16,7 +33,32 @@ export default function Transactions() {
     { id: "TXN-100931", amount: "$3,200.00", date: "2023-10-25 16:45", status: "Pending", risk: "Medium" },
     { id: "TXN-100932", amount: "$50.00", date: "2023-10-25 17:22", status: "Completed", risk: "Low" },
   ];
-  const transactions = [...createdTransactions, ...mockTransactions];
+  const [liveTransactions, setLiveTransactions] = useState([]);
+
+  useEffect(() => {
+    if (isDemoMode || !token) {
+      return undefined;
+    }
+
+    const loadTransactions = async () => {
+      try {
+        const response = await fetch(`${GATEWAY_URL}/api/transactions?page=0&size=100`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!response.ok) throw new Error(`Gateway returned HTTP ${response.status}`);
+        const data = await response.json();
+        setLiveTransactions((data.content || []).map(mapTransaction));
+      } catch (error) {
+        console.error('Unable to load transactions from the database:', error);
+      }
+    };
+
+    loadTransactions();
+    const interval = setInterval(loadTransactions, 3000);
+    return () => clearInterval(interval);
+  }, [isDemoMode, token]);
+
+  const transactions = isDemoMode ? [...createdTransactions, ...mockTransactions] : liveTransactions;
 
   const query = searchTerm.trim().toLowerCase();
   const visibleTransactions = transactions.filter((transaction) => {
@@ -55,7 +97,7 @@ export default function Transactions() {
         id: transaction.transactionId,
         amount: `$${Number(transaction.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`,
         date: new Date(transaction.timestamp).toLocaleString(),
-        status: transaction.status === 'FLAGGED' ? 'Flagged' : 'Completed',
+        status: transaction.status === 'FLAGGED' ? 'Flagged' : transaction.status === 'PENDING' ? 'Pending' : 'Completed',
         risk: transaction.riskLevel ? transaction.riskLevel[0].toUpperCase() + transaction.riskLevel.slice(1) : 'Unknown',
       },
       ...items,
